@@ -72,6 +72,30 @@
       <hr/>
 
 
+      <h2> Structure </h2>
+      <section>
+
+	Basic html structure is shown below:
+
+<pre><code class="language-html">&lt;header&gt;&lt;h1&gt; Page title &lt;/h1&gt;&lt;/header&gt;
+&lt;main&gt;
+
+  &lt;h2&gt; Title &lt;/h2&gt;
+  &lt;section&gt;
+    &lt;p&gt; Paragraph &lt;/p&gt;
+    &lt;p&gt; Paragraph &lt;/p&gt;
+  &lt;/section&gt;
+
+  &lt;h2&gt; Title &lt;/h2&gt;
+  &lt;section&gt;
+    &lt;p&gt; Paragraph &lt;/p&gt;
+    &lt;p&gt; Paragraph &lt;/p&gt;
+  &lt;/section&gt;
+ 
+&lt;/main&gt;
+&lt;footer&gt; copyright &lt;/footer&gt;
+</code></pre>
+      </section>
 
       <h2> Syntax Hilight </h2>
       <section>
@@ -105,7 +129,31 @@ ssize_t dma_write(struct nettlp *nt, uintptr_t addr, void *buf, size_t count);
 </code></pre>
 	
 	<p>
-	  Syntax hilight by prism in language-shell-session
+	  html example for sysntax hilight in language-c (above) is
+	  shown below.
+	</p>
+<pre><code class="language-html">&lt;pre&gt;&lt;code class="language-c"&gt;/*
+ * Direct Memory Access API
+ *
+ * dma_read() and dma_write()
+ *
+ * @nt: struct nettlp, must be initalized in advance.
+ * @addr: address of DMA destination.
+ * @buf: buffer to be written to or read from remote.
+ * @count: number of bytes to be written or read.
+ * returns number of bytes transferred (as payload)
+ */
+ssize_t dma_read(struct nettlp *nt, uintptr_t addr, void *buf, size_t count);
+ssize_t dma_write(struct nettlp *nt, uintptr_t addr, void *buf, size_t count);
+&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
+
+
+	<p>
+	  For chaning languages,
+	  change <code class="inline">class="language-*"</code> for
+	  code tag. For example, syntax hilight by prism in
+	  language-shell-session.
 	</p>
 
 <pre><code class="language-shell-session">tsukumo1:/home/upa % ls
@@ -139,7 +187,7 @@ module PIO #(
 
       </section>
 
-      <h2> Note </h2>
+      <h2> Note and inline code </h2>
       <section>
 	<p>
 	  Noting a block can be achieved by 
@@ -151,22 +199,34 @@ module PIO #(
  	  <strong>Note:</strong> this is just a note.
 	</p>
 
-	<p> Inline code is <code class="inline">&lt;code class="inline"&gt; example &lt;/code&gt;</code> ant then it makes
+<pre><code class="language-html">&lt;p class="note"&gt;
+  &lt;strong&gt;Note:&lt;/strong&gt; this is just a note.
+&lt;/p&gt;
+</code></pre>
+
+	<p> Inline code is <code class="inline">&lt;code
+	class="inline"&gt; example &lt;/code&gt;</code> and then it
+	makes
 	  <code class="inline">example</code>.
 	</p>
 
       </section>
 
+
       <h2> Image </h2>
       <section>
+	<p> An exmaple usage of image tag</p>
+
 	<div class="img">
 	  <img src="rasta.png"/>
 	  <p> Figure 1: Yokubari Rasta-men, Katame Koime </p>
 	</div>
 
-	<p>
-	  Above shows an image example.
-	</p>
+<pre><code class="language-html">&lt;div class="img"&gt;
+  &lt;img src="rasta.png"/&gt;
+  &lt;p&gt; Figure 1: Yokubari Rasta-men, Katame Koime &lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
 
       </section>
 
