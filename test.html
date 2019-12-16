@@ -19,7 +19,8 @@
       <section>
 	<ul>
 	  <li> 1st item </li>
-	  <li> 2st item </li>
+	  <li> 2nd item </li>
+	  <li> 3rd item </li>
 	</ul>
 
 	<a href="#"> This is Link </a>
@@ -45,19 +46,12 @@
 	<p>
 	  hoge huga huga. hoge huga huga. hoge huga huga. hoge huga
 	  huga. hoge huga huga. hoge huga huga. hoge huga huga. hoge
-	  huga huga. hoge huga huga. hoge huga huga.
-	</p>
-
-	<p>
-	  hoge huga huga. hoge huga huga. hoge huga huga. hoge huga
+	  huga huga. hoge huga huga. hoge huga huga. hoge huga
 	  huga. hoge huga huga. hoge huga huga. hoge huga huga. hoge
-	  huga huga. hoge huga huga. hoge huga huga.
+	  huga huga. hoge huga huga. hoge huga huga. hoge huga
+	  huga. hoge huga huga. hoge huga huga.
 	</p>
       </section>
-
-      hr start
-      <hr/>
-      hr end
 
       <h4> h4 title </h4>
       <section>
@@ -71,12 +65,31 @@
 	  huga. hoge huga huga. hoge huga huga. hoge huga huga. hoge
 	  huga huga. hoge huga huga. hoge huga huga.
 	</p>
+      </section>
+
+
+
+      <hr/>
+
+
+
+      <h2> Syntax Hilight </h2>
+      <section>
+	<p>
+	  For Syntax hilight, it uses <a href="https://prismjs.com/">
+	    prism.js</a>. Usage
+	    is: <code class="inline">&lt;pre&gt;&lt;code
+	    class="language-c"&gt; code here
+	    &lt;code&gt;&lt;pre&gt;</code>.
+	  <code class="inline">language-c</code> can
+	    be <code class="inline">language-shell-session</code>
+	    or <code class="inline">language-verilog</code>.
+	</p>
 
 	<p>
 	  Syntax hilight by prism in language-c.
 	</p>
-	<pre><code class="language-c">
-/*
+<pre><code class="language-c">/*
  * Direct Memory Access API
  *
  * dma_read() and dma_write()
@@ -89,51 +102,65 @@
  */
 ssize_t dma_read(struct nettlp *nt, uintptr_t addr, void *buf, size_t count);
 ssize_t dma_write(struct nettlp *nt, uintptr_t addr, void *buf, size_t count);
-	</code></pre>
+</code></pre>
 	
 	<p>
-	  Syntax hilight by prism in shell-session
+	  Syntax hilight by prism in language-shell-session
 	</p>
-	<pre><code class="language-shell-session">
-tsukumo1:/home/upa % ls
+
+<pre><code class="language-shell-session">tsukumo1:/home/upa % ls
 a                                setup-flow-director-eth2.sh
 a.pcap                           setup-flow-director.sh
 core                             setup-hugepage.sh
-mnt				 setup-i40e.sh
-nettlp-rescan.sh		 setup-p2pmmap.sh
+mnt                              setup-i40e.sh
+nettlp-rescan.sh                 setup-p2pmmap.sh
 pciebench-bw-1024byte-read.pcap  setup-unvme.sh
-pkg				 setup-vlans-for-root-complex.sh
-pram				 src
-read-bw.pcap			 test
-setup-cpufreq.sh		 test.pcap
-setup-eth1-for-libtlp.sh	 vivado
-setup-eth2-for-libtlp-ns.sh	 work
-	</code></pre>
-      </section>
+pkg                              setup-vlans-for-root-complex.sh
+pram                             src
+read-bw.pcap                     test
+setup-cpufreq.sh                 test.pcap
+setup-eth1-for-libtlp.sh         vivado
+setup-eth2-for-libtlp-ns.sh      work
+</code></pre>
 
-      <section>
-	<p> New section for testing hilight. Syntax hilight by prism
-	  in verilog
+
+	<p>
+	  Syntax hilight by prism in language-verilog.
 	</p>
-	  
-	<pre><code class="language-verilog">
-(* DowngradeIPIdentifiedWarnings = "yes" *)
+<pre><code class="language-verilog">(* DowngradeIPIdentifiedWarnings = "yes" *)
 module PIO #(
   parameter C_DATA_WIDTH = 64,            // RX/TX interface data width
 
   // Do not override parameters below this line
   parameter KEEP_WIDTH = C_DATA_WIDTH / 8,              // TSTRB width
   parameter TCQ        = 1
-)(
-	</code></pre>
+)
+</code></pre>
 
       </section>
 
+      <h2> Note </h2>
+      <section>
+	<p>
+	  Noting a block can be achieved by 
+	  <code class="inline">&lt;p class="note"&gt; This is note
+	   &lt;/p&gt;</code> like shown below:
+	</p>
+
+	<p class="note">
+ 	  <strong>Note:</strong> this is just a note.
+	</p>
+
+	<p> Inline code is <code class="inline">&lt;code class="inline"&gt; example &lt;/code&gt;</code> ant then it makes
+	  <code class="inline">example</code>.
+	</p>
+
+      </section>
 
     </main>
 
     <footer>
-      haeena.dev, 2019.
+      &copy; 2019 haeena.dev.
     </footer>
 
     <script type="text/javascript" src="js/prism.js"></script>
