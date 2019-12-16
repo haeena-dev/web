@@ -221,7 +221,9 @@ module PIO #(
       <section>
 	<h2> Image </h2>
 
-	<p> An exmaple usage of image tag.</p>
+	<p> An exmaple usage of img tag. img tag needs to be wrapped
+	by <code class="inline">&lt;div class="img"&gt;</code>.</p>
+
 	<div class="img">
 	  <img src="rasta.png"/>
 	  <p> Figure 1: Yokubari Rasta-men, Katame Koime </p>
@@ -234,6 +236,61 @@ module PIO #(
 </code></pre>
 
       </section>
+
+
+      <section>
+	<h2> Table </h2>
+
+	<p> An exmaple usage of table. table tag needs to be wrapped by
+	  <code class="inline">&lt;div class="table"&gt;</code>.</p>
+
+	<div class="table">
+	  <table>
+	    <thead>
+	      <tr>
+		<th> Column 1 </th><th> Column 2 </th>
+		<th> Column 3 </th><th> Column 4 </th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	      <tr>
+		<td> Value A on C1 </td><td> Value A on C2 </td>
+		<td> Value A on C3 </td><td> Value A on C4 </td>
+	      </tr>
+	      <tr>
+		<td> Value B on C1 </td><td> Value B on C2 </td>
+		<td> Value B on C3 </td><td> Value B on C4 </td>
+	      </tr>
+	    </tbody>
+	  </table>
+	  <p> Table 1: basic table with th </p>
+	</div>
+
+<pre><code class="language-html">&lt;div class="table"&gt;
+  &lt;table&gt;
+    &lt;thead&gt;
+      &lt;tr&gt;
+        &lt;th&gt; Column 1 &lt;/th&gt;&lt;th&gt; Column 2 &lt;/th&gt;
+        &lt;th&gt; Column 3 &lt;/th&gt;&lt;th&gt; Column 4 &lt;/th&gt;
+      &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+      &lt;tr&gt;
+        &lt;td&gt; Value A on C1 &lt;/td&gt;&lt;td&gt; Value A on C2 &lt;/td&gt;
+        &lt;td&gt; Value A on C3 &lt;/td&gt;&lt;td&gt; Value A on C4 &lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;td&gt; Value B on C1 &lt;/td&gt;&lt;td&gt; Value B on C2 &lt;/td&gt;
+        &lt;td&gt; Value B on C3 &lt;/td&gt;&lt;td&gt; Value B on C4 &lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+  &lt;p&gt; Table 1: basic table with th &lt;/p&gt;
+&lt;/div&gt;
+</pre></code>
+
+      </section>
+
 
     </main>
 
