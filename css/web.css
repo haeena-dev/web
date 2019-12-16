@@ -63,7 +63,7 @@ p.note {
 code.inline {
 	background-color: rgb(235, 235, 235);
 	font-size: 1.1em;
-	padding: 1px 5px;
+	padding: 1px 1px;
 	margin: 2px 2px;
 	border-radius: 4px 4px 4px 4px / 4px 4px 4px 4px;
 	border: 1px solid rgb(180, 180, 180);
