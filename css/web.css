@@ -50,12 +50,11 @@ footer {
 	height: 30px;
 }
 
-div.img {	/* use <div class="img"> as a wrapper for <img> */
-	text-align: center;
-}
-div.img p {
-	margin: 5px 0 0 0;
-}
+/* use <div class="img"> as a wrapper for <img> */
+div.img	{	text-align: center;	}
+div.img img {	max-width: 100%;	}
+div.img p {	margin: 5px 0 0 0;	}
+
 
 p.note {
 	background-color: rgb(235, 235, 235);
