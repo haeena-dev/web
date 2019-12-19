@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> haeena.dev </title>
+    <link rel="stylesheet" type="text/css" href="../css/web.css">
+    <link rel="stylesheet" type="text/css" href="../css/prism.css">
+  </head>
+  <body>
+
+    <header>
+      <h1> NetTLP: Setup </h1>
+    </header>
+
+    <main>
+
+      <section>
+	<h2> Overview </h2>
+	<p>
+	  A NetTLP platform is composed of two hosts: <strong>adapter
+	    host</strong> and <strong>device host</strong>. An adapter
+	    host has at least one FPGA-based NetTLP adapter and a
+	    device host performs software device, which is the
+	    substance of the NetTLP adapter on the adapter host.  The
+	    hosts are connected by 10Gbps Ethernet link between the
+	    NetTLP adapter and a normal 10Gbps NIC on the device host.
+	</p>
+      </section>
+
+      <section>
+	<h2> Setup adapter host </h2>
+
+	<h3> Requirement </h3>
+	<ul> 
+	  <li> OS: Ubuntu 18.04 </li>
+	  <li> x1 PCIe Gen2 x16 slot </li>
+	  <li> Vivado XXXX (<strong>TBD</strong>) </li>
+	</ul>
+
+	<p>
+	  Install a NetTLP adapter to a PCIe slot, program the adapter
+	  via Vivado. After booting the adapter host, you can see a
+	  device with vendor ID 3776:8022.
+	</p>
+
+	<pre><code class="language-shell-session">$ lspci -d 3776:8022
+1b:00.0 Memory controller: Device 3776:8022
+
+$ sudo lspci -v -d 3776:8022
+1b:00.0 Memory controller: Device 3776:8022
+	Subsystem: Device 3776:8022
+	Flags: fast devsel, NUMA node 0
+	Memory at c0100000 (32-bit, non-prefetchable) [disabled] [size=16K]
+	Memory at a0000000 (64-bit, prefetchable) [disabled] [size=256M]
+	Memory at b0000000 (64-bit, prefetchable) [disabled] [size=256M]
+	Capabilities: [40] Power Management version 3
+	Capabilities: [60] Express Endpoint, MSI 00
+	Capabilities: [9c] MSI-X: Enable- Count=22 Masked-
+	Capabilities: [100] Device Serial Number 00-00-00-01-01-00-0a-35</code></pre>
+
+	<p>
+	  The current NetTLP adapter (v0.17) has three Base Address
+	  Registers (BAR). BAR0 is used to store adapter specific
+	  information (i.e., MAC address and IP address), and BAR2 is
+	  sued to store MSI-X table. BAR4 is quite special:
+	  Transaction Layer Packets (TLPs) to BAR are encapsulated in
+	  Ethernet, IP, and UDP headers, and transmitted to the device
+	  host via the 10Gbps Ethernet Link. In the above example,
+	  memory accesses to 0xb0000000-0xc9999999 in the MMIO space
+	  are delivered to the device host.
+	</p>
+
+      </section>
+
+    </main>
+
+    <footer>
+      &copy; 2019 haeena.dev.
+    </footer>
+
+    <script type="text/javascript" src="../js/prism.js"></script>
+  </body>
+</html>
