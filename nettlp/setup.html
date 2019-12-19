@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title> haeena.dev </title>
+    <title> NetTLP: setup </title>
     <link rel="stylesheet" type="text/css" href="../css/web.css">
     <link rel="stylesheet" type="text/css" href="../css/prism.css">
   </head>
@@ -29,7 +29,7 @@
       <section>
 	<h2> Setup adapter host </h2>
 
-	<h3> Requirement </h3>
+	<h3> Requirement of adapter host </h3>
 	<ul> 
 	  <li> OS: Ubuntu 18.04 </li>
 	  <li> x1 PCIe Gen2 x16 slot </li>
@@ -65,11 +65,37 @@ $ sudo lspci -v -d 3776:8022
 	  Transaction Layer Packets (TLPs) to BAR are encapsulated in
 	  Ethernet, IP, and UDP headers, and transmitted to the device
 	  host via the 10Gbps Ethernet Link. In the above example,
-	  memory accesses to 0xb0000000-0xc9999999 in the MMIO space
+	  memory accesses to 0xb0000000-0xbfffffff in the MMIO space
 	  are delivered to the device host.
 	</p>
 
       </section>
+
+      <section>
+	<h2> Setup device host </h2>
+
+	<h3> Requirement of adapter host </h3>
+	<ul>
+	  <li> OS: Ubuntu 18.04 </li>
+	  <li> x1 10Gbps Ethernet port </li>
+	</ul>
+
+	<p>
+	  Connect the device host to the NetTLP adapter on the adapter
+	  host by 10Gbps Ethernet link. The NetTLP adapter always
+	  sends light during board power is on, so that
+	  only <code class="inline">ip link set dev ethX up</code> is
+	  required to bring the link up.
+	</p>
+
+	<p>
+	  Next step is to setup a static ARP entry. The current
+	  implementation of NetTLP adapter (v0.17) does not respond to
+	  ARP request. Thus, the device host needs to have a static
+	  ARP entry for the connected NetTLP adapter.
+	</p>
+
+	
 
     </main>
 
