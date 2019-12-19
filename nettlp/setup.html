@@ -37,9 +37,9 @@
 	</ul>
 
 	<p>
-	  Install a NetTLP adapter to a PCIe slot, program the adapter
-	  via Vivado. After booting the adapter host, you can see a
-	  device with vendor ID 3776:8022.
+	  Install a NetTLP adapter to a PCIe slot, and program the
+	  adapter via Vivado. After booting the adapter host, you can
+	  see a device with vendor ID 3776:8022.
 	</p>
 
 	<pre><code class="language-shell-session">$ lspci -d 3776:8022
@@ -69,6 +69,96 @@ $ sudo lspci -v -d 3776:8022
 	  are delivered to the device host.
 	</p>
 
+	<p>
+	  Next, install a NetTLP basic driver. this driver just
+	  enables the NetTLP adapter by the Linux way, and it provides
+	  a simple messaging API to obtain adapter infromation (i.e.,
+	  bus and slot number, and BAR4 address) from the device host.
+	</p>
+
+	<pre><code class="language-shell-session">$ mkdir nettlp
+$ cd nettlp
+$ git clone https://github.com/nettlp/driver
+Cloning into 'driver'...
+remote: Enumerating objects: 30, done.
+remote: Counting objects: 100% (30/30), done.
+remote: Compressing objects: 100% (20/20), done.
+remote: Total 42 (delta 14), reused 25 (delta 10), pack-reused 12
+Unpacking objects: 100% (42/42), done.
+$ cd driver
+$ ls
+Makefile  nettlp_main.c  nettlp_msg.c  nettlp_msg.h
+
+$ make
+make -C /lib/modules/4.20.2-tsukumo1-nopti/build M=/home/upa/work/test/nettlp/driver V=0 modules
+make[1]: Entering directory '/home/upa/src/linux-4.20.2'
+  CC [M]  /home/upa/work/test/nettlp/driver/nettlp_main.o
+  CC [M]  /home/upa/work/test/nettlp/driver/nettlp_msg.o
+  LD [M]  /home/upa/work/test/nettlp/driver/nettlp.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/upa/work/test/nettlp/driver/nettlp.mod.o
+  LD [M]  /home/upa/work/test/nettlp/driver/nettlp.ko
+make[1]: Leaving directory '/home/upa/src/linux-4.20.2'
+$ ls
+Makefile	nettlp.ko     nettlp.o	     nettlp_msg.c
+Module.symvers	nettlp.mod.c  nettlp_main.c  nettlp_msg.h
+modules.order	nettlp.mod.o  nettlp_main.o  nettlp_msg.o
+
+# nettlp.ko is the basic driver.
+</code></pre>
+
+	<p>
+	  Note that current basic driver implementation depends on
+	  udp_tunnel module. Please load it before insmod nettlp.ko.
+	</p>
+
+	<pre><code class="language-shell-session">$ sudo modprobe udp_tunnel
+$ sudo insmod nettlp.ko
+</code></pre>
+
+	<p>
+	  If the NetTLP adapter is correctory working, you can see
+	  dmesg output like shown below:
+	</p>
+	<pre><code class="language-shell-session">[454516.635720] nettlp: nettlp (v0.0.3) is loaded
+[454516.636224] nettlp: nettlp_pci_init: register nettlp device 0000:1b:00.0
+[454516.636237] nettlp 0000:1b:00.0: enabling device (0100 -> 0102)
+[454516.636252] nettlp: BAR0 start  : 0xc0100000
+[454516.636253] nettlp: BAR0 end    : 0xc0103fff
+[454516.636254] nettlp: BAR0 flags  : 0x40200
+[454516.636255] nettlp: BAR0 len    : 16384
+[454516.636256] nettlp: BAR2 start  : 0xa0000000
+[454516.636257] nettlp: BAR2 end    : 0xafffffff
+[454516.636258] nettlp: BAR2 flags  : 0x14220c
+[454516.636259] nettlp: BAR2 len    : 268435456
+[454516.636385] nettlp: BAR2 mapped : 000000006b3cb24e
+[454516.636386] nettlp: BAR4 start  : 0xb0000000
+[454516.636387] nettlp: BAR4 end    : 0xbfffffff
+[454516.636388] nettlp: BAR4 flags  : 0x14220c
+[454516.636389] nettlp: BAR4 len    : 268435456
+[454516.636390] nettlp: Allocate BAR4 as p2pdma memory
+[454516.656933] 0000:1b:00.0 initialised, 65536 pages in 0ms
+[454516.656945] nettlp 0000:1b:00.0: added peer-to-peer DMA memory [mem 0xb0000000-0xbfffffff 64bit pref]
+[454516.657128] initialize nettlp message socket
+[454516.657184] nettlp: MSIX [0]: Addr=0x0, Data=00000000
+[454516.657185] nettlp: MSIX [1]: Addr=0x0, Data=00000000
+[454516.657187] nettlp: MSIX [2]: Addr=0x0, Data=00000000
+[454516.657188] nettlp: MSIX [3]: Addr=0x0, Data=00000000
+[454516.657189] nettlp: MSIX [4]: Addr=0x0, Data=00000000
+[454516.657190] nettlp: MSIX [5]: Addr=0x0, Data=00000000
+[454516.657191] nettlp: MSIX [6]: Addr=0x0, Data=00000000
+[454516.657192] nettlp: MSIX [7]: Addr=0x0, Data=00000000
+[454516.657193] nettlp: MSIX [8]: Addr=0x0, Data=00000000
+[454516.657194] nettlp: MSIX [9]: Addr=0x0, Data=00000000
+[454516.657195] nettlp: MSIX [10]: Addr=0x0, Data=00000000
+[454516.657196] nettlp: MSIX [11]: Addr=0x0, Data=00000000
+[454516.657197] nettlp: MSIX [12]: Addr=0x0, Data=00000000
+[454516.657198] nettlp: MSIX [13]: Addr=0x0, Data=00000000
+[454516.657199] nettlp: MSIX [14]: Addr=0x0, Data=00000000
+[454516.657200] nettlp: MSIX [15]: Addr=0x0, Data=00000000
+</pre></code>
+
       </section>
 
       <section>
@@ -91,7 +181,7 @@ $ sudo lspci -v -d 3776:8022
 	<p>
 	  Next step is to setup a static ARP entry. The current
 	  implementation of NetTLP adapter (v0.17) does not respond to
-	  ARP request. Thus, the device host needs to have a static
+	  ARP requests. Thus, the device host needs to have a static
 	  ARP entry for the connected NetTLP adapter.
 	</p>
 
