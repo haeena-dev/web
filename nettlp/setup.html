@@ -62,11 +62,11 @@ $ sudo lspci -v -d 3776:8022
 	  Registers (BAR). BAR0 is used to store adapter specific
 	  information (i.e., MAC address and IP address), and BAR2 is
 	  sued to store MSI-X table. BAR4 is quite special:
-	  Transaction Layer Packets (TLPs) to BAR are encapsulated in
-	  Ethernet, IP, and UDP headers, and transmitted to the device
-	  host via the 10Gbps Ethernet Link. In the above example,
-	  memory accesses to 0xb0000000-0xbfffffff in the MMIO space
-	  are delivered to the device host.
+	  Transaction Layer Packets (TLPs) to the BAR are encapsulated
+	  in Ethernet, IP, and UDP headers, and transmitted to the
+	  device host via the 10Gbps Ethernet Link. In the above
+	  example, memory accesses to 0xb0000000-0xbfffffff in the
+	  MMIO space are delivered to the device host.
 	</p>
 
 	<p>
@@ -164,7 +164,7 @@ $ sudo insmod nettlp.ko
       <section>
 	<h2> Setup device host </h2>
 
-	<h3> Requirement of adapter host </h3>
+	<h3> Requirement of device host </h3>
 	<ul>
 	  <li> OS: Ubuntu 18.04 </li>
 	  <li> x1 10Gbps Ethernet port </li>
