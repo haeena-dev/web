@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> NetTLP: micro bemchmark </title>
+    <link rel="stylesheet" type="text/css" href="../css/web.css">
+    <link rel="stylesheet" type="text/css" href="../css/prism.css">
+  </head>
+  <body>
+
+    <header>
+      <h1> <a href="index.html">NetTLP</a>: Micro bemchmark </h1>
+    </header>
+
+    <main>
+
+      <section>
+	<h2> Overview </h2>
+	<p>
+	  This section describes how to conduct a micro benchmark on a
+	  NetTLP platform. In the NetTLP platform, there are two
+	  directions of PCIe transactions: (1) from LibTLP to the
+	  NetTLP adapter, and (2) from the NetTLP adapter to
+	  LibTLP. The former that this page describes indicates that
+	  an application performing a software PCIe device issues DMAs
+	  to the memory on the adapter host.
+	</p>
+      </section>
+
+      <section>
+	<h2> tlpperf </h2>
+
+	<p>
+	  To generate PCIe transactions from software, we developed a
+	  LibTLP-based benchmark application called
+	  <i>tlpperf</i>. Users can send memory read and write
+	  requests to the memory on the adapter host through the
+	  NetTLP adapter from the device host by using tlpperf.
+	  tlpperf is also contained in the apps directory of the
+	  LibTLP repository.
+	</p>
+
+	<pre><code class="language-shell-session">$ ./tlpperf -h
+./tlpperf: invalid option -- 'h'
+tlpperf usage
+
+  basic parameters
+    -r X.X.X.X  remote addr at NetTLP link
+    -l X.X.X.X  local addr at NetTLP link
+    -b XX:XX    bus number of requester
+
+  DMA parameters
+    -d read|write  DMA direction
+    -a 0xADDR      DMA target region address (physical)
+    -s u_int       DMA target region size
+    -L u_int       DMA length (spilited into MPS and MRRS)
+
+  benchmark style parameters
+    -N u_int                  number of thread
+    -R same|diff              how to split DMA region for threads
+    -P fix|seq|seq512|random  access pattern on each reagion
+    -M                        measuring latency mode
+
+  options
+    -c int   count of interations on each thread
+    -i msec  interval for each iteration
+    -t sec   duration
+    -D       debug mode
+
+  for target host
+    -S size  size to allocate hugepage as tlpperf target
+</code></pre>
+
+	<p>
+	  First, a target memory region for benchmarking is needed at
+	  the adapter host. tlpperf provides an option for this
+	  purpose. -S option allocates a specified sized memory region
+	  and enters while (1) sleep(1);. This target mode allocates
+	  the region from hugepage, so that please setup hugepage in
+	  advance.
+	</p>
+
+	<pre><code class="language-shell-session"># At adapter host
+# setup hugepage
+$ cat setup-hugepage.sh
+#!/bin/bash
+echo 2048 > /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
+mkdir -p /mnt/hugepages
+mount -t hugetlbfs nodev /mnt/hugepages
+$ sudo ./setup-hugepage.sh
+
+# start tlpperf in target mode: allocate a 2MB region
+$ sudo ./tlpperf -S $(( 1024 * 1024 * 2))
+2101248-byte allocated, physical address is 0x74ee00000
+</code></pre>
+
+	<p>
+	  Next, run tlpperf at the device host. An example shown below
+	  issues 512-byte DMA read to the memory region on the adapter
+	  host (0x74ee00000 is indicated by the target mode tlpperf)
+	  with a single thread. The throughput is approximately
+	  133Mbps. Note that this throughput does not include any
+	  headers, i.e., Ethernet, IP, UDP, NetTLP, and TLP
+	  headers. The throughput indicates goodput of DMA.
+	</p>
+
+	<pre><code class="language-shell-session"># At device host
+$ ./tlpperf -r 192.168.10.1 -l 192.168.10.3 -b 1b:00 -d read -a 0x74ee00000 -s 2097152 -L 512     
+============ tlpperf ============
+-r remote:              192.168.10.1
+-l local:               192.168.10.3
+-b requester:           1b:00
+
+-d direction:           read
+-a DMA region:          0x74ee00000
+-s DMA region size:     2097152
+-L DMA length           512
+
+-N nthreads:            1
+-R how to split:        same
+-P pattern:             seq
+-M latency mode:        off
+
+-c count:               0
+-i interval:            0
+-t duration             0
+-D debug:               off
+=================================
+count_thread: start count thread
+benchmark_thread: start on cpu 0, address 0x74ee00000, size 2097152, len 512
+   1: 133246976 bps
+   1: 32531 tps
+   2: 133255168 bps
+   2: 32533 tps
+   3: 133263360 bps
+   3: 32535 tps
+   4: 133255168 bps
+   4: 32533 tps
+^Cstop_all: stopping...
+   5: 48467968 bps
+   5: 11833 tps
+</code></pre>
+
+	<p>
+	  tlpperf provides various options for benchmarking DMA on a
+	  NetTLP platform: DMA directions, region size, access
+	  patterns, number of threads, and so on. The detailed
+	  benchmark results are published at the paper (<strong>link
+	  will be added</strong>).
+	</p>
+
+	<h3> Optimization </h3>
+	<p>
+	  For improving throughput, NetTLP exploits the TLP <i>tag</i>
+	  field to distribute receiving encapsulated TLPs among
+	  multiple hardware queues of a NIC and CPU cores at the
+	  device host. The tag field is used to distinguish individual
+	  non-posted transactions that can be processed
+	  independently. The NetTLP adapter embeds the lower 4-bit of
+	  the tag values into the lower 4-bit of UDP port numbers when
+	  encapsulating TLPs. As a result, PCIe transactions to the
+	  NetTLP adapter are delivered through different 16 UDP flows
+	  based on the tag field, and the device host can receive the
+	  flows by different NIC queues.
+	</p>
+
+	<p>
+	  To receive the UDP flows efficiently, we
+	  used <a href="https://software.intel.com/en-us/articles/setting-up-intel-ethernet-flow-director">
+	  Intel Ethernet Flow Director</a>. Flow Director allows us to
+	  assign specific flows to specific CPU cores. By using it,
+	  the 16 UDP flows from the NetTLP adapter can be assigned to
+	  each CPU core where the corresponding tlpperf thread
+	  running.
+	</p>
+
+	<p>
+	  A sample script shown below assigns the Nth flow to the Nth
+	  core. tlpperf also assigns threads corresponding to tag
+	  values to each core with the same rule.
+	</p>
+	<pre><code class="language-bash">#!/bin/bash
+
+ETH=eth1
+SADDR=192.168.10.1
+DADDR=192.168.10.3
+
+ethtool --features ${ETH} ntuple off
+ethtool --features ${ETH} ntuple on
+
+for x in `seq 0 15`; do
+
+	idx=$(( $x % 16 ))
+	PORT=$(( 12288 + $idx ))
+
+	cmd="ethtool --config-ntuple ${ETH} flow-type udp4 \
+		src-ip ${SADDR} dst-ip ${DADDR} \
+		src-port $PORT dst-port $PORT action $idx"
+	echo $cmd
+	$cmd
+done
+
+ethtool --show-ntuple ${ETH}
+</code></pre>
+
+      </section>
+
+      <section>
+	<h2> From NetTLP adapter to LibTLP </h2>
+	<p>
+	  It needs slight rare equipments and some tricks. To generate
+	  PCIe transactions on in this direction, we
+	  used <a href="https://www.cl.cam.ac.uk/research/srg/netos/projects/pcie-bench/">pcie-bench</a>. The
+	  pcie-bench with NetFPGA-SUME issued PCIe transactions to the
+	  BAR4 of NetTLP adapter instead of main memory, and psmem on
+	  the device hosts responded to the transactions. This setup
+	  requires PCIe switch and P2P DMA.
+	</p>
+
+	<p>
+	  For the adapter host that needs PCIe switches to accommodate
+	  NetFPGA-SUME for pcie-bench and NetTLP adapter, we
+	  used <a href="https://www.asus.com/Motherboards/WS-X299-SAGE/">ASUS
+	  WS X299 SAGE</a> motherboard. For P2P DMA, we modified the
+	  pcie-bench implementation for NetFPGA-SUME (<strong>clean up
+	  the modified pcie-bench and publish it here</strong>).
+	</p>
+
+	<p>
+	  How to use pcie-bench is
+	  here <a href="https://github.com/pcie-bench/pciebench-netfpga">https://github.com/pcie-bench/pciebench-netfpga</a>,
+	  and the benchmark results are published at the paper
+	  (<strong>link will be added</strong>)
+	</p>
+
+      </section>
+
+      <section>
+	Back to the <a href="index.html">top</a>.
+      </section>
+
+    </main>
+
+    <footer>
+      &copy; 2019 haeena.dev.
+    </footer>
+
+    <script type="text/javascript" src="../js/prism.js"></script>
+  </body>
+</html>
