@@ -67,7 +67,6 @@ code.inline {
 	margin: 2px 2px;
 	border-radius: 4px 4px 4px 4px / 4px 4px 4px 4px;
 	border: 1px solid rgb(180, 180, 180);
-	display: inline-block;
 }
 
 hr {

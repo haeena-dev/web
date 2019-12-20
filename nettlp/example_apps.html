@@ -22,18 +22,209 @@
 	</p>
 
 	<p>
-	  Example applications described here are (1) dma_read, which
-	  is a very simple DMA read issued from software to hardware,
-	  and (2) psmem, which is a pseudo memory software device.
-	  Both applications can be found at apps directory
-	  in <a href="https://github.com/NetTLP/libtlp/tree/master/apps">LibTLP
-	  repository</a>.
+	  Example applications described here are
+	  (1) <strong>dma_read</strong>, which is a very simple DMA
+	  read issued from software to hardware, and
+	  (2) <strong>psmem</strong>, which is a pseudo memory
+	  software device.  Both applications can be found at apps
+	  directory
+	  in <a href="https://github.com/NetTLP/libtlp/tree/master/apps">
+	  LibTLP repository</a>.
 	</p>
       </section>
 
       <section>
-	<h3> dma_read </h3>
+	<h2> tcpdump </h2>
+	<p>
+	  Before starting LibTLP applications, we recommend to compile
+	  and install a
+	  modified <a href="https://github.com/nettlp/tcpdump">
+	  tcpdump</a>, which can distinguish and display TLPs
+	  encapsualted in Ethernet/IP by NetTLP.
+	</p>
+
+	<pre><code class="language-shell-session">$ sudo apt install libpcap-dev
+$ git clone https://github.com/nettlp/tcpdump
+$ cd tcpdump
+$ ./configure
+$ make
+$ sudo make install
+# then, the modified tcpdump is installed in /usr/local/sbin/tcpdump
+</code></pre>
+
       </section>
+
+      <section>
+	<h2> dma_read </h2>
+	<p>
+	  This application simply sends MRd to the adapter host
+	  through the NetTLP adapter.
+	</p>
+
+	<pre><code class="language-shell-session">$ cd libtlp/apps/
+$ ./dma_read -h
+./dma_read: invalid option -- 'h'
+usage
+    -r remote addr at NetTLP link
+    -l local addr at NetTLP link
+    -b bus number of NetTLP adapter, XX:XX
+    -t tag
+    -a target address
+    -s transfer size (default 4-byte)
+    -m MaxReadRequestSize
+</code></pre>
+
+	<p>
+	  -r and -l options specify remote and local addresses on the
+	  Ethernet link between adapter and device hosts from the
+	  viewpoint of LibTLP: remote means NetTLP adpater and local
+	  means LibTLP (device host's IP address). Namely, -r
+	  192.168.10.1 and -l 192.168.10.3 at the
+	  example <a href="setup.html">setup</a>. -b is bus number
+	  where the adapter host is installed at the adapter host.
+	  This value is used for requester ID of TLP(s).
+	</p>
+
+	<p>
+	  For the first trial of DMA read on NetTLP, clone and run a
+	  simple demo program
+	   <a href="https://github.com/NetTLP/demo-swopp19">
+	     https://github.com/NetTLP/demo-swopp19</a> at adapter
+	   host. This program just periodically shows a physical
+	   address of a char* buffer that holds "test_string".
+	</p>
+
+	<pre><code class="language-shell-session"># At adapter host
+$ git clone https://github.com/nettlp/demo-swopp19
+Cloning into 'demo-swopp19'...
+remote: Enumerating objects: 9, done.
+remote: Counting objects: 100% (9/9), done.
+remote: Compressing objects: 100% (8/8), done.
+remote: Total 9 (delta 1), reused 9 (delta 1), pack-reused 0
+Unpacking objects: 100% (9/9), done.
+$ cd demo-swopp19/
+$ make
+gcc -Wall -o demo demo.c
+$  sudo ./demo
+PHY ADDR 0x838de1dc0 test_string
+PHY ADDR 0x838de1dc0 test_string
+PHY ADDR 0x838de1dc0 test_string
+^C
+</code></pre>
+
+	<p>
+	  By using the dma_read application, you can read the memory
+	  region of the char* on the adapter host through DMA read
+	  from the device host as shown below:
+	</p>
+
+	<pre><code class="language-shell-session"># 1. run the demo program at adapter host.
+$ sudo ./demo
+PHY ADDR 0x82159c720 test_string
+PHY ADDR 0x82159c720 test_string
+PHY ADDR 0x82159c720 test_string
+</code></pre>
+
+	<pre><code class="language-shell-session"># 2. run dma_read at device host
+$ ./dma_read -r 192.168.10.1 -l 192.168.10.3 -b 1b:00 -a 0x82159c720 -s 12
+======== struct nettlp ========
+port:        12288
+remote_addr: 192.168.10.1
+local_addr:  192.168.10.3
+requester:   1b:00
+sockfd:      3
+===============================
+dma_read to 0x82159c720 returns 12
+
+Hex dump
+7465 7374 5f73 7472 696e 6700 
+
+ASCII dump
+test _str ing 
+</code></pre>
+
+	<p>
+	  The ASCII dump shows the DMAed memory region that is
+	  "test_string".
+	</p>
+
+	<p>
+	  At that moment, dma_read (actually LibTLP) made a MRd TLP
+	  and send it to the NetTLP adapter over the Ethernet link,
+	  and the adapter decapsulated it and devliered the original
+	  (inner) TLP to the root complex at the adapter host over the
+	  PCIe links. Afterward, the root complex sent a corresponding
+	  CplD TLP to the adapter, and then the adapter encapsualted
+	  the TLP and send it to the device host.
+	</p>
+
+	<p>
+	  As expected, the TLPs can be tcpdumped at the device host as
+	  shown below:
+	</p>
+
+	<pre><code class="language-shell-session"># 3. the modified tcpdump at device host
+$ sudo tcpdump -ni eth1
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on eth1, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+20:47:10.315276 IP 192.168.10.3.12288 > 192.168.10.1.12288: NetTLP: MRd, 4DW, tc 0, flags [none], attrs [none], len 3, requester 1b:00, tag 0x00, last 0xf, first 0xf, Addr 0x000000082159c720
+20:47:10.315307 IP 192.168.10.1.12288 > 192.168.10.3.12288: NetTLP: CplD, 3DW, WD, tc 0, flags [none], attrs [none], len 3, completer 00:00, success, byte count 12, requester 1b:00, tag 0x00, lowaddr 0x20
+^C
+2 packets captured
+2 packets received by filter
+0 packets dropped by kernel
+</code></pre>
+
+	<p> In addition, DMA on NetTLP would read any memory regions
+	  as shown:</p>
+	<pre><code class="language-shell-session">$ ./dma_read -r 192.168.10.1 -l 192.168.10.3 -b 1b:00 -a 0x0 -s 256
+======== struct nettlp ========
+port:        12288
+remote_addr: 192.168.10.1
+local_addr:  192.168.10.3
+requester:   1b:00
+sockfd:      3
+===============================
+dma_read to 0x0 returns 256
+
+Hex dump
+f3ee 00f0 f3ee 00f0 c3e2 00f0 f3ee 00f0 f3ee 00f0 54ff 00f0 8732 00f0 2f32 00f0 
+a5fe 00f0 87e9 00f0 f3ee 00f0 f3ee 00f0 f3ee 00f0 f3ee 00f0 57ef 00f0 53ff 00f0 
+dc17 00c0 4df8 00f0 41f8 00f0 59ec 00f0 39e7 00f0 59f8 00f0 2ee8 00f0 d2ef 00f0 
+00e0 00f0 f2e6 00f0 6efe 00f0 53ff 00f0 53ff 00f0 a4f0 00f0 c7ef 00f0 d0cc 00c0 
+f3ee 00f0 f3ee 00f0 f3ee 00f0 f3ee 00f0 f3ee 00f0 f3ee 00f0 f3ee 00f0 f3ee 00f0 
+f3ee 00f0 f3ee 00f0 f3ee 00f0 f3ee 00f0 f3ee 00f0 f3ee 00f0 f3ee 00f0 f3ee 00f0 
+f3ee 00f0 f3ee 00f0 f3ee 00f0 f3ee 00f0 f3ee 00f0 f3ee 00f0 f3ee 00f0 f3ee 00f0 
+f3ee 00f0 f3ee 00f0 f3ee 00f0 f3ee 00f0 f3ee 00f0 f3ee 00f0 f3ee 00f0 f3ee 00f0
+</code></pre>
+
+	<p>
+	  And, DMA write also works. For example, rewriting the buffer
+	  of the demo program. In the below
+	  example, <code class="inline">./dma_write -r 192.168.10.1 -l
+	  192.168.10.3 -b 1b:00 -a 0x827b2f320 -p
+	  modified_by_dma_write -s 22</code> at device host overwrites
+	  0x827b2f320 at adapter host.
+	</p>
+
+	<pre><code class="language-shell-session">$ sudo ./demo
+PHY ADDR 0x827b2f320 test_string
+PHY ADDR 0x827b2f320 test_string
+PHY ADDR 0x827b2f320 test_string
+PHY ADDR 0x827b2f320 modified_by_dma_write
+PHY ADDR 0x827b2f320 modified_by_dma_write
+PHY ADDR 0x827b2f320 modified_by_dma_write
+</code></pre>
+
+	<p class="note">
+	  <strong>Note:</strong> As expected, this platform easily,
+	  unintentionally, and sometimes silently disrupts the system
+	  of adapter host. Meanwhile, this charcteristic offers
+	  powerful padaptability to diverse use cases.
+	</p>
+
+      </section>
+      
 
     </main>
 

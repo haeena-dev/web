@@ -117,7 +117,7 @@ make[1]: Entering directory '/home/upa/src/linux-4.20.2'
   LD [M]  /home/upa/work/test/nettlp/driver/nettlp.ko
 make[1]: Leaving directory '/home/upa/src/linux-4.20.2'
 $ ls
-Makefile	nettlp.ko     nettlp.o	     nettlp_msg.c
+Makefile        nettlp.ko     nettlp.o       nettlp_msg.c
 Module.symvers	nettlp.mod.c  nettlp_main.c  nettlp_msg.h
 modules.order	nettlp.mod.o  nettlp_main.o  nettlp_msg.o
 
@@ -175,6 +175,16 @@ $ sudo insmod nettlp.ko
 [454516.657200] nettlp: MSIX [15]: Addr=0x0, Data=00000000
 </pre></code>
 
+	<p class="note">
+	  <strong>Note:</strong> NetTLP might conflict with some
+	  security mechanisms. If you do not focus on such mechanisms
+	  and do not mind, we suggest to
+	  add <code class="inline">"nopti nospectre_v2 nokaslr"</code>
+	  to GRUB_CMDLINE_LINUX in /etc/default/grub, update-grub, and
+	  reboot the machine. Note that we have NOT tested NetTLP with
+	  iommu yet.
+	</p>
+
       </section>
 
       <section>
@@ -205,12 +215,19 @@ $ sudo insmod nettlp.ko
 	<p class="note">
 	  <strong>Note:</strong> default MAC address and IP address of
 	  current NetTLP adapter are 00:11:22:33:44:55 and
-	  192.168.10.1. <a href="adapter.html">This configuration can
-	  be changed</a>. These addresses are assigned to just the
-	  adapter for TLP encapsulation and decapsulation, and not
-	  used for network stack of the adapter host. Thus, this
-	  address does not respond to any packets, e.g., ICMP, except
-	  NetTLP packets.
+	  192.168.10.1. In addition, the NetTLP adapter uses
+	  FF:FF:FF:FF:FF:FF and 192.168.10.3 as default destination
+	  addresses for encapsulation.
+	  <a href="adapter.html"> They can be changed</a>. These
+	  addresses are used for only TLP encapsulation and
+	  decapsulation, not used for network stack of the adapter
+	  host. Thus, this address (192.168.10.1 as default) does not
+	  respond to any packets except NetTLP packets.
+	</p>
+
+	<p>
+	  In this setup, we use 192.168.10.3/24 for the device host
+	  according to the default IP address of the adapter.
 	</p>
 
 	<pre><code class="language-shell-session"># eth1 is an exmaple name of the 10Gbps port connected to NetTLP adapter
