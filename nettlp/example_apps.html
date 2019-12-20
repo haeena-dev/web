@@ -58,7 +58,7 @@ $ sudo make install
 	<h2> dma_read </h2>
 	<p>
 	  This application simply sends MRd to the adapter host
-	  through the NetTLP adapter.
+	  through the NetTLP adapter, receives CplD, and dumps data.
 	</p>
 
 	<pre><code class="language-shell-session">$ cd libtlp/apps/
@@ -163,7 +163,7 @@ test _str ing
 	  shown below:
 	</p>
 
-	<pre><code class="language-shell-session"># 3. See the TLPs by the modified tcpdump at device host
+	<pre><code class="language-shell-session"># 3. capture the TLPs by the modified tcpdump at device host
 $ sudo tcpdump -ni eth1
 tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
 listening on eth1, link-type EN10MB (Ethernet), snapshot length 262144 bytes
@@ -203,8 +203,8 @@ f3ee 00f0 f3ee 00f0 f3ee 00f0 f3ee 00f0 f3ee 00f0 f3ee 00f0 f3ee 00f0 f3ee 00f0
 	  of the demo program. In the below
 	  example, <code class="inline">./dma_write -r 192.168.10.1 -l
 	  192.168.10.3 -b 1b:00 -a 0x827b2f320 -p
-	  modified_by_dma_write -s 22</code> at device host overwrites
-	  0x827b2f320 at adapter host.
+	  modified_by_dma_write -s 22</code> at the device host
+	  overwrites 0x827b2f320 at the adapter host.
 	</p>
 
 	<pre><code class="language-shell-session">$ sudo ./demo
@@ -219,8 +219,8 @@ PHY ADDR 0x827b2f320 modified_by_dma_write
 	<p class="note">
 	  <strong>Note:</strong> As expected, this platform easily,
 	  unintentionally, and sometimes silently disrupts the system
-	  of adapter host. Meanwhile, this charcteristic offers
-	  powerful adaptability to diverse use cases.
+	  of adapter host. On the other hand, this charcteristic
+	  offers powerful adaptability to diverse use cases.
 	</p>
 
       </section>
@@ -229,7 +229,110 @@ PHY ADDR 0x827b2f320 modified_by_dma_write
 	<h2> psmem </h2>
 	<p>
 	  psmem is a pseudo memory device implementation in software.
+	  psmem on the device host pretends a memory region associated
+	  with the BAR4 of the NetTLP adapter. TLPs to the BAR4 space
+	  of the NetTLP adapter are transmitted to the device host.
+	  When psmem receives a MWr TLP, psmem saves the data and the
+	  associating address.  When psmem receives a MRd TLP, psmem
+	  sends CplD TLP(s) with proper data associating the requested
+	  address.
 	</p>
+
+	<p> First, run psmem on the device host. Note
+	  that <code class="inline">-a 0xa0000000</code> specifies the
+	  BAR4 address of the adapter at the adapter host. Adjust it
+	  to your environment.
+	</p>
+
+	<pre><code class="language-shell-session"># At device host
+$ ./psmem -h
+./psmem: invalid option -- 'h'
+usage
+    -r remote addr at NetTLP link
+    -l local addr at NetTLP link
+
+    -R remote host addr to get BAR4 start address
+    or
+    -a start addess (HEX)
+    -b bus number, XX:XX
+
+# snipped
+
+$ ./psmem -r 192.168.10.1 -l 192.168.10.3 -a 0xa0000000	-b 1b:00
+start psmem callbacks. BAR4 is 0xa0000000, Dev is 0x1b00
+nettlp_cb_thread: start callback on cpu 0, port 12288
+nettlp_cb_thread: start callback on cpu 1, port 12289
+nettlp_cb_thread: start callback on cpu 2, port 12290
+nettlp_cb_thread: start callback on cpu 3, port 12291
+nettlp_cb_thread: start callback on cpu 4, port 12292
+nettlp_cb_thread: start callback on cpu 5, port 12293
+nettlp_cb_thread: start callback on cpu 6, port 12294
+nettlp_cb_thread: start callback on cpu 7, port 12295
+nettlp_cb_thread: start callback on cpu 8, port 12296
+nettlp_cb_thread: start callback on cpu 9, port 12297
+nettlp_cb_thread: start callback on cpu 10, port 12298
+nettlp_cb_thread: start callback on cpu 11, port 12299
+nettlp_cb_thread: start callback on cpu 12, port 12300
+nettlp_cb_thread: start callback on cpu 13, port 12301
+nettlp_cb_thread: start callback on cpu 14, port 12302
+nettlp_cb_thread: start callback on cpu 15, port 12303
+</code></pre>
+
+	<p>
+	  Second, access the BAR4 space of the NetTLP adapter.
+	  <a href="https://github.com/NetTLP/utils">This
+	    repository</a> contains a simple but useful application,
+	    called <i>memory</i>, that enables
+	    accessing any memory regions through /dev/mem.
+	</p>
+
+	<pre><code class="language-shell-session"># At adapter host
+$ sudo ./memory 0xa0000000
+</code></pre>
+
+	<p>
+	  Then, the memory command preiodically access the region
+	  started from 0xa0000000, the BAR4 space of the NetTLP
+	  adapter, by 1 byte, and you can see and modify memories
+	  through the curses-based user interface. Meanwhile, you see
+	  psmem outputs MRd to the region at the device host. TLPs
+	  issued by the memory accesses can be seen by the modified
+	  tcpdump.
+	</p>
+
+	<pre><code class="language-shell-session"># At device host while running psmem
+$ sudo tcpdump -ni eth1
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on eth1, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+22:22:09.944928 IP 192.168.10.1.12288 > 192.168.10.3.12288: NetTLP: MRd, 3DW, tc 0, flags [none], attrs [none], len 1, requester 16:00, tag 0x00, last 0x0, first 0x2, Addr 0xa00001d0
+22:22:09.945003 IP 192.168.10.3.12288 > 192.168.10.1.12288: NetTLP: CplD, 3DW, WD, tc 0, flags [none], attrs [none], len 1, completer 1b:00, success, byte count 1, requester 16:00, tag 0x00, lowaddr 0x51
+22:22:09.945018 IP 192.168.10.1.12288 > 192.168.10.3.12288: NetTLP: MRd, 3DW, tc 0, flags [none], attrs [none], len 1, requester 16:00, tag 0x00, last 0x0, first 0x4, Addr 0xa00001d0
+22:22:09.945092 IP 192.168.10.3.12288 > 192.168.10.1.12288: NetTLP: CplD, 3DW, WD, tc 0, flags [none], attrs [none], len 1, completer 1b:00, success, byte count 1, requester 16:00, tag 0x00, lowaddr 0x52
+22:22:09.945107 IP 192.168.10.1.12288 > 192.168.10.3.12288: NetTLP: MRd, 3DW, tc 0, flags [none], attrs [none], len 1, requester 16:00, tag 0x00, last 0x0, first 0x8, Addr 0xa00001d0
+22:22:09.945185 IP 192.168.10.3.12288 > 192.168.10.1.12288: NetTLP: CplD, 3DW, WD, tc 0, flags [none], attrs [none], len 1, completer 1b:00, success, byte count 1, requester 16:00, tag 0x00, lowaddr 0x53
+22:22:09.945464 IP 192.168.10.3.12288 > 192.168.10.1.12288: NetTLP: CplD, 3DW, WD, tc 0, flags [none], attrs [none], len 1, completer 1b:00, success, byte count 1, requester 16:00, tag 0x00, lowaddr 0x56
+22:22:09.945551 IP 192.168.10.3.12288 > 192.168.10.1.12288: NetTLP: CplD, 3DW, WD, tc 0, flags [none], attrs [none], len 1, completer 1b:00, success, byte count 1, requester 16:00, tag 0x00, lowaddr 0x57
+22:22:09.945567 IP 192.168.10.1.12288 > 192.168.10.3.12288: NetTLP: MRd, 3DW, tc 0, flags [none], attrs [none], len 1, requester 16:00, tag 0x00, last 0x0, first 0x1, Addr 0xa00001d8
+22:22:09.945642 IP 192.168.10.3.12288 > 192.168.10.1.12288: NetTLP: CplD, 3DW, WD, tc 0, flags [none], attrs [none], len 1, completer 1b:00, success, byte count 1, requester 16:00, tag 0x00, lowaddr 0x58
+</code></pre>
+
+	<p class="note">
+	  <strong>Note:</strong> the memory command reads each 1 byte
+	  continously. Such accuess patterns issue continuous MRd TLPs
+	  to LibTLP at a hardware-level speed. As a result, the
+	  current LibTLP implementation that uses the traditional
+	  socket can not send response CplD TLPs immediately.  This
+	  means that multiple MRd TLPs would be buffered at NIC
+	  queues, network stack, socket layer, etc.  The consecutive
+	  CplD TLPs on the above tcpdump output indicate this
+	  phenomenon.
+	</p>
+
+      </section>
+
+      <section>
+	<a href="micro_benchmark.html">Next section</a> describes a
+	micro benchamrk of NetTLP using tlpperf.
       </section>
 
     </main>
