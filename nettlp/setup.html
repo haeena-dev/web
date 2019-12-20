@@ -44,9 +44,12 @@
 
 	<h3> Install NetTLP Adapter </h3>
 	<p>
-	  Install a NetTLP adapter to a PCIe slot, and program the
-	  adapter via Vivado. After booting the adapter host, you can
-	  see a device with vendor ID 3776:8022.
+	  Install a NetTLP adapter to a PCIe slot, and program The
+	  adapter via Vivado. the bit file can be found at
+	  <a href="https://github.com/NetTLP/adapter/releases">
+	    https://github.com/NetTLP/adapter/releases</a>.  After
+	  booting the adapter host, you can see a device with vendor
+	  ID 3776:8022.
 	</p>
 
 	<pre><code class="language-shell-session">$ lspci -d 3776:8022
@@ -79,10 +82,13 @@ $ sudo lspci -v -d 3776:8022
 
 	<h3> Install NetTLP basic driver </h3>
 	<p>
-	  Next, install a NetTLP basic driver. this driver just
-	  enables the NetTLP adapter by the Linux way, and it provides
-	  a simple messaging API to obtain adapter infromation (i.e.,
-	  bus and slot number, and BAR4 address) from the device host.
+	  Next, install a NetTLP basic driver found
+	  at <a href="https://github.com/nettlp/driver">
+	    https://github.com/nettlp/driver</a>. This
+	  driver just enables the NetTLP adapter by the Linux way, and
+	  it provides a simple messaging API to obtain adapter
+	  infromation (i.e., bus and slot number, and BAR4 address)
+	  from the device host.
 	</p>
 
 	<pre><code class="language-shell-session">$ mkdir nettlp
@@ -202,8 +208,8 @@ $ sudo insmod nettlp.ko
 	  be changed</a>. These addresses are assigned to just the
 	  adapter for TLP encapsulation and decapsulation, and not
 	  used for network stack of the adapter host. Thus, this
-	  address does not respond to any packets including ICMP
-	  except NetTLP packets.
+	  address does not respond to any packets, e.g., ICMP, except
+	  NetTLP packets.
 	</p>
 
 	<pre><code class="language-shell-session"># eth1 is an exmaple name of the 10Gbps port connected to NetTLP adapter
@@ -216,6 +222,67 @@ $ ip nei show 192.168.10.1
 </code></pre>
 
 
+	<h3> Compile LibTLP </h3>
+	<p>
+	  LibTLP works on the device host. Download and compile it
+	  from <a href="https://github.com/nettlp/libtlp">
+	    https://github.com/nettlp/libtlp</a>.
+	  The LibTLP repository contains a shared library called
+	  libtlp and sampel applications such as dma_read, pmem, and
+	  tlpperf.
+	</p>
+
+	<pre><code class="language-shell-session">$ mkdir nettlp
+$ cd nettlp
+$ git clone https://github.com/nettlp/libtlp
+Cloning into 'libtlp'...
+Username for 'https://github.com': upa
+Password for 'https://upa@github.com': 
+remote: Enumerating objects: 300, done.
+remote: Counting objects: 100% (300/300), done.
+remote: Compressing objects: 100% (198/198), done.
+remote: Total 300 (delta 184), reused 211 (delta 95), pack-reused 0
+Receiving objects: 100% (300/300), 69.79 KiB | 441.00 KiB/s, done.
+Resolving deltas: 100% (184/184), done.
+$ cd libtlp/
+$ ls
+Makefile  README.md  apps  include  lib  test
+$ make
+make[1]: Entering directory '/home/upa/work/test/nettlp/libtlp/lib'
+gcc -I./ -I../include -c libtlp.c
+ar rcs libtlp.a libtlp.o
+make[1]: Leaving directory '/home/upa/work/test/nettlp/libtlp/lib'
+make[1]: Entering directory '/home/upa/work/test/nettlp/libtlp/test'
+gcc -g -Wall -I../include   -L../lib   test_dma_read.c  -ltlp -o test_dma_read
+gcc -g -Wall -I../include   -L../lib   test_dma_write.c  -ltlp -o test_dma_write
+gcc -g -Wall -I../include   -L../lib   test_msg_bar4.c  -ltlp -o test_msg_bar4
+gcc -g -Wall -I../include   -L../lib   test_msg_msix.c  -ltlp -o test_msg_msix
+gcc -g -Wall -I../include   -L../lib   test_msg_devid.c  -ltlp -o test_msg_devid
+make[1]: Leaving directory '/home/upa/work/test/nettlp/libtlp/test'
+make[1]: Entering directory '/home/upa/work/test/nettlp/libtlp/apps'
+gcc -g -Wall -I../include   -L../lib   dma_read.c  -ltlp -lpthread -o dma_read
+gcc -g -Wall -I../include   -L../lib   dma_write.c  -ltlp -lpthread -o dma_write
+gcc -g -Wall -I../include   -L../lib   pmem.c  -ltlp -lpthread -o pmem
+gcc -g -Wall -I../include   -L../lib   process-list.c  -ltlp -lpthread -o process-list
+gcc -g -Wall -I../include   -L../lib   pgd-walk.c  -ltlp -lpthread -o pgd-walk
+gcc -g -Wall -I../include   -L../lib   codedump.c  -ltlp -lpthread -o codedump
+gcc -g -Wall -I../include   -L../lib   tlpperf.c  -ltlp -lpthread -o tlpperf
+make[1]: Leaving directory '/home/upa/work/test/nettlp/libtlp/apps'
+$ ls apps/
+Makefile    dma_read	 pgd-walk    process-list	      tlpperf.c
+README.md   dma_read.c	 pgd-walk.c  process-list.c	      util.h
+codedump    dma_write	 pmem	     thread_affinity_apple.h
+codedump.c  dma_write.c  pmem.c      tlpperf
+</code></pre>
+
+      </section>
+
+      <section>
+	<p>
+	  <a href="example_apps.html">Next section</a> is how to play
+	  example LibTLP applications on this environment.
+	</p>
+      </section>
     </main>
 
     <footer>
