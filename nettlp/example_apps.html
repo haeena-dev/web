@@ -87,22 +87,19 @@ usage
 
 	<p>
 	  For the first trial of DMA read on NetTLP, clone and run a
-	  simple demo program
-	   <a href="https://github.com/NetTLP/demo-swopp19">
-	     https://github.com/NetTLP/demo-swopp19</a> at adapter
-	   host. This program just periodically shows a physical
-	   address of a char* buffer that holds "test_string".
+	  simple demo program (<strong> Link will be added</strgon>)
+	  at adapter host. This program just periodically shows a
+	  physical address of a char* buffer that holds "test_string".
 	</p>
 
 	<pre><code class="language-shell-session"># At adapter host
-$ git clone https://github.com/nettlp/demo-swopp19
-Cloning into 'demo-swopp19'...
+$ git clone DEMO PROGRAM REPO
 remote: Enumerating objects: 9, done.
 remote: Counting objects: 100% (9/9), done.
 remote: Compressing objects: 100% (8/8), done.
 remote: Total 9 (delta 1), reused 9 (delta 1), pack-reused 0
 Unpacking objects: 100% (9/9), done.
-$ cd demo-swopp19/
+$ cd demo-prog/
 $ make
 gcc -Wall -o demo demo.c
 $  sudo ./demo
