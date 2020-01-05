@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> NetTLP: A nonexistent NIC </title>
+    <link rel="stylesheet" type="text/css" href="../css/web.css">
+    <link rel="stylesheet" type="text/css" href="../css/prism.css">
+  </head>
+  <body>
+
+    <header>
+      <h1><a href="index.html">NetTLP</a>: A nonexistent NIC</h1>
+    </header>
+
+    <main>
+
+      <section>
+	<h2> Overview </h2>
+	<p>
+	  On the NetTLP platform, you can develop your own PCIe
+	  devices in software interacting with hardware root complex.
+	  For an exmaple of such a software device, we introduce an
+	  implementation of <strong> simple NIC</strong>. The simple
+	  NIC was originally introduced
+	  by <a href="https://www.cl.cam.ac.uk/research/srg/netos/projects/pcie-bench/">pcie-bench</a>. The
+	  original simple NIC is a theoretical model of a simplistic
+	  Ethernet NIC, which does not have any performance
+	  optimizations and complicated DMA interfaces, for
+	  understanding PCIe interactions and calucating bandwidth.
+	  NetTLP enables implementing such models of PCIe devices in
+	  software and confirming whether the models actually work
+	  with existent hardware root complex. In other words, the
+	  PCIe devices are certainly implemented in software, but they
+	  perform as actual devices for physical root complxes.
+	  Moreover, its PCIe transactions can be observed by tcpdump.
+	</p>
+
+	<p>
+	  The PCIe interactions of the simple NIC model are described in
+	  <a href="https://github.com/pcie-bench/pcie-model">the
+	  model's implementation</a>, actually,
+	  here: <a href="https://github.com/pcie-bench/pcie-model/blob/master/model/simple_nic.py">https://github.com/pcie-bench/pcie-model/blob/master/model/simple_nic.py</a>. Our
+	  simple NIC implementation in NetTLP follows the steps of the
+	  PCIe interactions described in the source code. Anyway, this
+	  page focuses on how to setup and run the simple NIC on the
+	  NetTLP platform.
+	</p>
+
+      </section>
+
+      <section>
+	<h2> Setup </h2>
+
+	<p>
+	  To run the simple NIC, please setup a NetTLP environment
+	  following the <a href="setup.html">instruction</a> and
+	  confirm <a href="example_apps.html">the exmaple applications
+	  work</a>.
+	</p>
+
+        <div class="img">
+          <a href="fig/simple-nic-setup.png">
+	    <img src="fig/simple-nic-setup.png"/></a>
+          <p>Figure 1: Overview of an environment to run simple NIC.</p>
+        </div>
+      </section>
+
+    </main>
+
+    <footer>
+      &copy; 2019 haeena.dev.
+    </footer>
+
+    <script type="text/javascript" src="../js/prism.js"></script>
+  </body>
+</html>
