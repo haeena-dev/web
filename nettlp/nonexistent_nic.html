@@ -197,7 +197,8 @@ $ sudo insmod nettlp_snic_driver.ko
 	  representing the simple NIC.
 	</p>
 
-	<pre><code class="language-shell-session">[1382475.456710] nettlp_snic_driver: nettlp_snic_pci_init: register nettlp simple nic device 0000:1b:00.0
+	<pre><code class="language-shell-session">[1382475.456615] nettlp_snic_driver: nettlp_snic (v0.0.1) is loaded
+[1382475.456710] nettlp_snic_driver: nettlp_snic_pci_init: register nettlp simple nic device 0000:1b:00.0
 [1382475.456722] nettlp_snic_driver 0000:1b:00.0: enabling device (0100 -> 0102)
 [1382475.456861] nettlp_snic_driver: BAR4 0xb0000000 is mapped to 00000000fdb0aee4
 [1382475.456871] nettlp_snic_driver: BAR0 0xc0100000 is mapped to 0000000003c10e6c
@@ -239,7 +240,7 @@ supports-priv-flags: no
 
 	<pre><code class="language-shell-session">$ sudo ip link set dev enp27s0 name eth2
 $ ifconfig eth2
-eth2: flags=4098&lt;BROADCAST,MULTICAST%gt;  mtu 1500
+eth2: flags=4098&lt;BROADCAST,MULTICAST&gt;  mtu 1500
         ether 00:11:22:33:44:55  txqueuelen 1000  (Ethernet)
         RX packets 0  bytes 0 (0.0 B)
         RX errors 0  dropped 0  overruns 0  frame 0
@@ -302,6 +303,164 @@ Makefile  nettlp_snic_device  nettlp_snic_device.c
 	  <strong>Note:</strong> In the current implementation, libtlp
 	  directory and simple-nic directory must be located on the
 	  same directory. I will develop an install procedure soom.
+	</p>
+
+	<p>
+	  Then, start the simple-nic process at the device host.
+	</p>
+	<pre><code class="language-shell-session">$ ./nettlp_snic_device -h
+./nettlp_snic_device: invalid option -- 'h'
+usage
+    -r remote addr
+    -l local addr
+    -R remote host addr (not TLP NIC)
+
+    -t tunif name (default tap0)
+$ sudo ./nettlp_snic_device -r 192.168.10.1 -l 192.168.10.3 -R 172.16.0.1
+Device is 1b00
+BAR4 start address is 0xb0000000
+TX IRQ address is 0xfee1a000, data is 0x00004022
+RX IRQ address is 0xfee03000, data is 0x00004022
+create tap read thread
+start nettlp callback
+</code></pre>
+
+	<p>
+	  -r and -l options are identical to
+	  the <a href="exmaple_apps.html">example applications</a>.
+	  192.168.10.1 is the NetTLP adapter's address, and
+	  192.168.10.3 is the local address connected to the adapter,
+	  which is eth1 in Figure 1. -R option specifies the IP
+	  address of the adpater host on the management network. When
+	  nettlp_snic_device starts, it gathers necessary information
+	  from the adapter host, for exmaple, the address of BAR4 and
+	  IRQ infromations of the adapter. For this purpose,
+	  nettlp_snic_device uses a simple UDP-based messaging API
+	  implemented as a side-channel in the driver.
+	</p>
+
+	<p>
+	  If nettlp_snic_device successfully gets the information
+	  through the management network, it start to perform the
+	  simple NIC: waiting TLPs following the PCIe interactions of
+	  the simple NIC model. 
+	</p>
+
+	<p>
+	  nettlp_snic_device creates tap0, and it is automatically set
+	  up. This is the actual port of the simple NIC. To ping on
+	  this closed environment, set the tap0 as a bridge port of a
+	  linux bridge, and assign an IP address to the bridge.
+	</p>
+
+	<p>
+	  Please keep nettlp_snic_device running. Use other terminals
+	  on the device host.
+	</p>
+
+	<pre><code class="language-shell-session">$ ifconfig tap0
+tap0: flags=67&lt;UP,BROADCAST,RUNNING&gt;  mtu 1500
+        inet6 fe80::fc9d:a9ff:fe99:15cd  prefixlen 64  scopeid 0x20<link>
+        ether fe:9d:a9:99:15:cd  txqueuelen 1000  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 13  bytes 1006 (1.0 KB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+$ sudo ip link add br0 type bridge
+$ sudo ip link set dev br0 up
+$ sudo ip addr add dev br0 10.0.0.2/24
+$ sudo ip link set dev tap0 master br0
+$ ifconfig br0
+br0: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500
+        inet 10.0.0.2  netmask 255.255.255.0  broadcast 0.0.0.0
+        inet6 fe80::4c0d:f8ff:fe25:4b40  prefixlen 64  scopeid 0x20<link>
+        ether fe:9d:a9:99:15:cd  txqueuelen 1000  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 11  bytes 906 (906.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+</code></pre>
+
+      </section>
+
+      <section>
+	<h3> ping</h3>
+	<p>
+	  Now we can set the simple NIC up at the adpater host.
+	</p>
+
+	<pre><code class="language-shell-session">$ sudo ip addr add dev eth2 10.0.0.1/24
+$ sudo ip link set dev eth2 up
+$ ifconfig eth2
+eth2: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500
+        inet 10.0.0.1  netmask 255.255.255.0  broadcast 0.0.0.0
+        inet6 fe80::211:22ff:fe33:4455  prefixlen 64  scopeid 0x20<link>
+        ether 00:11:22:33:44:55  txqueuelen 1000  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 8  bytes 656 (656.0 B)
+        TX errors 0  dropped 1 overruns 0  carrier 0  collisions 0
+</code></pre>
+
+	<p>
+	  Then, the kernel tries to send some packets, so that you see
+	  some output messages from the nettlp_snic_device.
+	</p>
+
+	<pre><code class="language-shell-session">BAR4 start address is 0xb0000000
+TX IRQ address is 0xfee1a000, data is 0x00004022
+RX IRQ address is 0xfee03000, data is 0x00004022
+create tap read thread
+start nettlp callback
+nettlp_snic_mwr: dma_addr is 0xb0000008
+RX desc base is 0x2f005000
+nettlp_snic_mwr: dma_addr is 0xb0000014
+RX desc update: dma to 0xb0000014, rx desc ptr is 0x2f005000
+RX desc update: new rx_desc addr=0x2f006000 len=0
+nettlp_snic_mwr: dma_addr is 0xb0000018
+nettlp_snic_mwr: dma_addr is 0xb0000000
+TX desc base is 0x2f004000
+nettlp_snic_mwr: dma_addr is 0xb0000010
+idx 0, dma to 0xb0000010, tx desc ptr is 0x2f004000
+TX: pkt length is 90, addr is 0x3bb15000
+TX: generate interrupt to 0xfee1a000
+TX done
+nettlp_snic_mwr: dma_addr is 0xb0000010
+idx 0, dma to 0xb0000010, tx desc ptr is 0x2f004000
+TX: pkt length is 86, addr is 0x3bb15800
+TX: generate interrupt to 0xfee1a000
+TX done
+nettlp_snic_mwr: dma_addr is 0xb0000010
+idx 0, dma to 0xb0000010, tx desc ptr is 0x2f004000
+TX: pkt length is 90, addr is 0x3bb16000
+TX: generate interrupt to 0xfee1a000
+TX done
+</code></pre>
+
+	<p>
+	  And, you can ping via the simple NIC at the adapter host.
+	</p>
+
+	<pre><code class="language-shell-session">$ ping 10.0.0.2
+PING 10.0.0.2 (10.0.0.2) 56(84) bytes of data.
+64 bytes from 10.0.0.2: icmp_seq=1 ttl=64 time=0.297 ms
+64 bytes from 10.0.0.2: icmp_seq=2 ttl=64 time=0.246 ms
+64 bytes from 10.0.0.2: icmp_seq=3 ttl=64 time=0.239 ms
+^C
+--- 10.0.0.2 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2049ms
+rtt min/avg/max/mdev = 0.239/0.260/0.297/0.031 ms
+</code></pre>
+
+	<p>
+	  This ping send an ICMP echo packet to eth2, and then the
+	  driver notifies nettlp_snic_device about the TX descriptor
+	  for the packet (MWr TLP). Then nettlp_snic_device starts DMA
+	  Read to read the descriptor, and reads the packet content
+	  specified by the descriptor. After nettlp_snic_device writes
+	  the packet to the tap interface, it send a MWr TLP as the TX
+	  interrupt.
 	</p>
 
       </section>
