@@ -57,11 +57,81 @@
 	  work</a>.
 	</p>
 
+	<p> The simple NIC implementation is composed of two
+	  components: (1) a device driver for the NetTLP adapter and
+	  (2) the software device implementation for simple NIC using
+	  LibTLP. The driver treats the NetTLP adapter as an physical
+	  Ethernet NIC and create a netdevice interface (like usual
+	  Ethrenet interfaces in Linux as ifconfig command
+	  shows). Packets transmitted to the interface are delivered
+	  to the device host as TLPs over the PCIe links between the
+	  root complex and the NetTLP adapter, and the Ethernet link
+	  between the adapter host and device host. The simple NIC
+	  implementation receives the TLPs using LibTLP and send the
+	  packets to a tap interface.
+	</p>
+
         <div class="img">
           <a href="fig/simple-nic-setup.png">
 	    <img src="fig/simple-nic-setup.png"/></a>
-          <p>Figure 1: Overview of an environment to run simple NIC.</p>
+          <p>Figure 1: Overview of an environment to run the simple NIC.</p>
         </div>
+
+	<p>
+	  Figure 1 shows an exmaple setup of the simple NIC. Descriptions
+	  of network interfaces in the figure are:
+	</p>
+
+	<ul>
+	  <li>Adapter Host</li>
+	  <ul>
+	    <li>
+	      eth0: just a management network. A requirement is the
+	      adapter host must be able to communicate with the device
+	      host via this link.
+	    </li>
+	    <li>
+	      eth2: netdevice interface for the simple NIC. The simple
+	      NIC driver for the NetTLP adapter creates this
+	      interface. Packets to eth2 are deliverred to the device
+	      host by encapsulating TLPs in Ethernet via the 10G
+	      Ethernet link between the adapter and the device host.
+	    </li>
+	  </ul>
+	  <li>Device Host</li>
+	  <ul>
+	    <li>
+	      eth0: just a management network. A requirement is the
+	      device host must be able to communicate with the adapter
+	      host via this link.
+	    </li>
+	    <li>
+	      eth1: a netdevice interface to receive and send TLPs
+	      with the NetTLP adapter. It is eth1 in the <a href="setup.html">
+		setup instruction</a>.
+	    </li>
+	    <li>
+	      tap0: the actual ethernet port of the simple NIC. the
+	      simple NIC process on the device host creates this tap
+	      interface. Packets transmitted to the eth2 (the NetTLP
+	      adapter) on the device host are transmitted to this tap
+	      interface on the device host. As well as transmission,
+	      packets received by the tap0 are received by eth2 on the
+	      adapter host.
+	    </li>
+	    <li>
+	      br0: just a target interface to send ping. The tap0 is
+	      enslaved by the br0. As a result, packets transmitted to
+	      the eth2 on the adapter host are transmitted to the tap0
+	      and received by the br0. This means that we can ping
+	      between the eth2 on the adapter host (10.0.0.1) and br0
+	      on the device host (10.0.0.2).
+	    </li>
+	  </ul>
+	</ul>
+
+
+
       </section>
 
     </main>
