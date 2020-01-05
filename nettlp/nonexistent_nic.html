@@ -114,18 +114,18 @@
 	      tap0: the actual ethernet port of the simple NIC. the
 	      simple NIC process on the device host creates this tap
 	      interface. Packets transmitted to the eth2 (the NetTLP
-	      adapter) on the device host are transmitted to this tap
-	      interface on the device host. As well as transmission,
-	      packets received by the tap0 are received by eth2 on the
-	      adapter host.
+	      adapter) on the device host are transmitted from this
+	      tap interface on the device host. As well as the
+	      transmission, packets received by the tap0 are received
+	      by eth2 on the adapter host.
 	    </li>
 	    <li>
 	      br0: just a target interface to send ping. The tap0 is
 	      enslaved by the br0. As a result, packets transmitted to
-	      the eth2 on the adapter host are transmitted to the tap0
-	      and received by the br0. This means that we can ping
-	      between the eth2 on the adapter host (10.0.0.1) and br0
-	      on the device host (10.0.0.2).
+	      the eth2 on the adapter host are transmitted from the
+	      tap0 and received by the br0. This means that we can
+	      ping between the eth2 on the adapter host (10.0.0.1) and
+	      br0 on the device host (10.0.0.2).
 	    </li>
 	  </ul>
 	</ul>
