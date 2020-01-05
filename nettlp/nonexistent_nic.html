@@ -16,22 +16,22 @@
       <section>
 	<h2> Overview </h2>
 	<p>
-	  On the NetTLP platform, you can develop your own PCIe
-	  devices in software interacting with hardware root complex.
-	  For an exmaple of such a software device, we introduce an
+	  On the NetTLP platform, you can develop your PCIe devices in
+	  software interacting with hardware root complex.  For an
+	  exmaple of such a software device, we introduce an
 	  implementation of <strong> simple NIC</strong>. The simple
-	  NIC was originally introduced
-	  by <a href="https://www.cl.cam.ac.uk/research/srg/netos/projects/pcie-bench/">pcie-bench</a>. The
-	  original simple NIC is a theoretical model of a simplistic
-	  Ethernet NIC, which does not have any performance
-	  optimizations and complicated DMA interfaces, for
-	  understanding PCIe interactions and calucating bandwidth.
-	  NetTLP enables implementing such models of PCIe devices in
-	  software and confirming whether the models actually work
-	  with existent hardware root complex. In other words, the
-	  PCIe devices are certainly implemented in software, but they
-	  perform as actual devices for physical root complxes.
-	  Moreover, its PCIe transactions can be observed by tcpdump.
+	  NIC, originally introduced
+	  by <a href="https://www.cl.cam.ac.uk/research/srg/netos/projects/pcie-bench/">pcie-bench</a>,
+	  is a theoretical model of a simplistic Ethernet NIC, which
+	  does not have any performance optimizations and complicated
+	  DMA interfaces, for understanding PCIe interactions and
+	  calucating bandwidth.  NetTLP enables implementing such
+	  models of PCIe devices in software and confirming whether
+	  the models actually work with existent hardware root
+	  complex. In other words, the PCIe devices are certainly
+	  implemented in software, but they perform as actual devices
+	  for physical root complxes. Moreover, their PCIe
+	  transactions can be observed by tcpdump.
 	</p>
 
 	<p>
@@ -58,17 +58,17 @@
 	</p>
 
 	<p> The simple NIC implementation is composed of two
-	  components: (1) a device driver for the NetTLP adapter and
-	  (2) the software device implementation for simple NIC using
-	  LibTLP. The driver treats the NetTLP adapter as an physical
-	  Ethernet NIC and create a netdevice interface (like usual
-	  Ethrenet interfaces in Linux as ifconfig command
-	  shows). Packets transmitted to the interface are delivered
-	  to the device host as TLPs over the PCIe links between the
-	  root complex and the NetTLP adapter, and the Ethernet link
-	  between the adapter host and device host. The simple NIC
-	  implementation receives the TLPs using LibTLP and send the
-	  packets to a tap interface.
+	  components among both adapter and device hosts: (1) a device
+	  driver for the NetTLP adapter and (2) the software device
+	  implementation for simple NIC using LibTLP. The driver
+	  treats the NetTLP adapter as an physical Ethernet NIC and
+	  create a netdevice interface (like usual Ethrenet interfaces
+	  in Linux as ifconfig command shows). Packets transmitted to
+	  the interface are delivered to the device host as TLPs over
+	  the PCIe links between the root complex and the NetTLP
+	  adapter, and the Ethernet link between the adapter host and
+	  device host. The simple NIC implementation receives the TLPs
+	  using LibTLP and send the packets to a tap interface.
 	</p>
 
         <div class="img">
@@ -93,9 +93,10 @@
 	    <li>
 	      eth2: netdevice interface for the simple NIC. The simple
 	      NIC driver for the NetTLP adapter creates this
-	      interface. Packets to eth2 are deliverred to the device
-	      host by encapsulating TLPs in Ethernet via the 10G
-	      Ethernet link between the adapter and the device host.
+	      interface. Packets transmitted to eth2 are deliverred to
+	      the device host by encapsulating TLPs in Ethernet via
+	      the 10G Ethernet link between the adapter and the device
+	      host.
 	    </li>
 	  </ul>
 	  <li>Device Host</li>
@@ -107,30 +108,201 @@
 	    </li>
 	    <li>
 	      eth1: a netdevice interface to receive and send TLPs
-	      with the NetTLP adapter. It is eth1 in the <a href="setup.html">
-		setup instruction</a>.
+	      with the NetTLP adapter. It is eth1 in
+	      the <a href="setup.html"> setup instruction</a>.
 	    </li>
 	    <li>
 	      tap0: the actual ethernet port of the simple NIC. the
 	      simple NIC process on the device host creates this tap
-	      interface. Packets transmitted to the eth2 (the NetTLP
+	      interface. Packets transmitted to eth2 (the NetTLP
 	      adapter) on the device host are transmitted from this
 	      tap interface on the device host. As well as the
-	      transmission, packets received by the tap0 are received
-	      by eth2 on the adapter host.
+	      transmission, packets received by tap0 are received by
+	      eth2 on the adapter host.
 	    </li>
 	    <li>
-	      br0: just a target interface to send ping. The tap0 is
-	      enslaved by the br0. As a result, packets transmitted to
-	      the eth2 on the adapter host are transmitted from the
-	      tap0 and received by the br0. This means that we can
-	      ping between the eth2 on the adapter host (10.0.0.1) and
-	      br0 on the device host (10.0.0.2).
+	      br0: just a target interface to send ping. tap0 is
+	      enslaved by br0. As a result, packets transmitted to
+	      eth2 on the adapter host are transmitted from tap0 and
+	      received by br0. This means that we can ping between
+	      eth2 on the adapter host (10.0.0.1) and br0 on the
+	      device host (10.0.0.2).
 	    </li>
 	  </ul>
 	</ul>
 
+	<p>
+	  The implementation of simple NIC, which is illustrated as
+	  simple-nic in Figure 1, is responsible for the substance of
+	  the NIC represented as eth2 on the device host.  simple-nic
+	  receives and sends TLPs from and to the NetTLP adapter
+	  through LibTLP. The interactions between simple-nic and the
+	  NetTLP adapter fully follow the simple NIC model, and they
+	  can be observed by tcpdump at the 10G Ethernet link.
+	</p>
 
+      </section>
+
+      <section>
+	<h3> Adapter host </h3>
+	<p>
+	  First, install the simple NIC driver at the adapter host.
+	</p>
+
+	<pre><code class="language-shell-session">$ ls
+libtlp
+$ git clone https://github.com/nettlp/simple-nic
+Cloning into 'simple-nic'...
+remote: Enumerating objects: 112, done.
+remote: Counting objects: 100% (112/112), done.
+remote: Compressing objects: 100% (75/75), done.
+remote: Total 112 (delta 43), reused 98 (delta 29), pack-reused 0
+Receiving objects: 100% (112/112), 31.81 KiB | 552.00 KiB/s, done.
+Resolving deltas: 100% (43/43), done.
+
+$ ls
+libtlp  simple-nic
+$ cd simple-nic/
+$ ls
+device  driver  include
+$ cd driver/
+$ ls
+Makefile  nettlp_msg.c	nettlp_msg.h  nettlp_snic.c
+$ make
+make -C /lib/modules/4.20.2-tsukumo1-nopti/build M=/home/upa/work/test/nettlp/simple-nic/driver V=0 modules
+make[1]: Entering directory '/home/upa/src/linux-4.20.2'
+
+  WARNING: Symbol version dump ./Module.symvers
+           is missing; modules will have no dependencies and modversions.
+
+  CC [M]  /home/upa/work/test/nettlp/simple-nic/driver/nettlp_snic.o
+  CC [M]  /home/upa/work/test/nettlp/simple-nic/driver/nettlp_msg.o
+  LD [M]  /home/upa/work/test/nettlp/simple-nic/driver/nettlp_snic_driver.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/upa/work/test/nettlp/simple-nic/driver/nettlp_snic_driver.mod.o
+  LD [M]  /home/upa/work/test/nettlp/simple-nic/driver/nettlp_snic_driver.ko
+make[1]: Leaving directory '/home/upa/src/linux-4.20.2'
+
+$ ls
+Makefile        nettlp_msg.c  nettlp_snic.c          nettlp_snic_driver.mod.c
+Module.symvers  nettlp_msg.h  nettlp_snic.o          nettlp_snic_driver.mod.o
+modules.order   nettlp_msg.o  nettlp_snic_driver.ko  nettlp_snic_driver.o
+
+$ sudo insmod nettlp_snic_driver.ko
+</code></pre>
+
+	<p>
+	  Then, you can see dmesg output and a netdev interface
+	  representing the simple NIC.
+	</p>
+
+	<pre><code class="language-shell-session">[1382475.456710] nettlp_snic_driver: nettlp_snic_pci_init: register nettlp simple nic device 0000:1b:00.0
+[1382475.456722] nettlp_snic_driver 0000:1b:00.0: enabling device (0100 -> 0102)
+[1382475.456861] nettlp_snic_driver: BAR4 0xb0000000 is mapped to 00000000fdb0aee4
+[1382475.456871] nettlp_snic_driver: BAR0 0xc0100000 is mapped to 0000000003c10e6c
+[1382475.456904] nettlp_snic_driver: BAR2 0xa0000000 is mamped to 000000007bf72a9a
+[1382475.456923] nettlp_snic_driver: nettlp_snic_pci_init: rx_buf is 0x2f003000
+[1382475.456934] nettlp_snic_driver: nettlp_snic_init
+[1382475.457303] initialize nettlp message socket
+[1382475.457357] nettlp_snic_driver: nettlp_snic_pci_init: probe finished.
+[1382475.457359] nettlp_snic_driver: nettlp_snic_pci_init: tx desc is 0x2f001000, rx desc is 0x2f002000
+[1382475.466553] nettlp_snic_driver 0000:1b:00.0 enp27s0: renamed from eth0
+</code></pre>
+
+	<pre><code class="language-shell-session">$ ifconfig enp27s0
+enp27s0: flags=4098&lt;BROADCAST,MULTICAST&gt;  mtu 1500
+        ether 00:11:22:33:44:55  txqueuelen 1000  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+$ ethtool -i enp27s0
+driver: nettlp_snic_driver
+version: 
+firmware-version: 
+expansion-rom-version: 
+bus-info: 0000:1b:00.0
+supports-statistics: no
+supports-test: no
+supports-eeprom-access: no
+supports-register-dump: no
+supports-priv-flags: no
+</code></pre>
+
+	<p>
+	  To clarify this instruction, we change the
+	  name <code class="inline">enp27s0</code>
+	  to <code class="inline">eth2</code> to align with Figure 1.
+	</p>
+
+	<pre><code class="language-shell-session">$ sudo ip link set dev enp27s0 name eth2
+$ ifconfig eth2
+eth2: flags=4098&lt;BROADCAST,MULTICAST%gt;  mtu 1500
+        ether 00:11:22:33:44:55  txqueuelen 1000  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+</pre></code>
+	    
+	<p class="note">
+	  <strong>Warning:</strong> DO NOT set eth2 up at this moment.
+	  simple-nic process, the substance of the simple NIC, must be
+	  running before eth2 up. If do that, the kernel tries to send
+	  packets, e.g., IPv6 router solicitation, and then the driver
+	  sends a MWr TLP to inform the device about a TX desciptor.
+	  However, there is no response from the device,
+	  becuase <i>the device</i>, which is the software simple-nic
+	  process on the device host, has not been running yet.
+	  
+	</p>
+
+      </section>
+
+      <section>
+	<h3> Device host</h3>
+	<p>
+	  Before making eth2 up, start the simple-nic process at the
+	  device host.
+	</p>
+
+	<pre><code class="language-shell-session">$ ls
+libtlp
+$ git clone https://github.com/nettlp/simple-nic
+Cloning into 'simple-nic'...
+remote: Enumerating objects: 112, done.
+remote: Counting objects: 100% (112/112), done.
+remote: Compressing objects: 100% (75/75), done.
+remote: Total 112 (delta 43), reused 98 (delta 29), pack-reused 0
+Receiving objects: 100% (112/112), 31.81 KiB | 552.00 KiB/s, done.
+Resolving deltas: 100% (43/43), done.
+
+$ ls
+libtlp  simple-nic
+$ cd simple-nic/
+$ ls
+device  driver  include
+$ cd device/
+$ ls
+Makefile  nettlp_snic_device.c
+$ make
+gcc -g -Wall -I../../libtlp/include -I../include  -L../../libtlp/lib  nettlp_snic_device.c  -ltlp -lpthread -o nettlp_snic_device
+$ ls
+Makefile  nettlp_snic_device  nettlp_snic_device.c
+</code></pre>
+
+	<p>
+	  <code class="inline">nettlp_snic_device</code> is the
+	  simple-nic process.
+	</p>
+
+	<p class="note">
+	  <strong>Note:</strong> In the current implementation, libtlp
+	  directory and simple-nic directory must be located on the
+	  same directory. I will develop an install procedure soom.
+	</p>
 
       </section>
 
