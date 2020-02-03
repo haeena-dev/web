@@ -103,7 +103,7 @@ li { margin: 0.5em 0 0.5em 0; }
 div.img	{	text-align: center;	margin: 20px 0px 20px 0px; }
 div.img img {	max-width: 100%;	margin: 0 0 0 0; }
 div.img p {	margin: 10px 0 0 0;	}
-
+div.img #top-image { max-width: 75%; margin-top: 20px; }
 
 /* Table: use <div class="table"> as a wrapper for <table> */
 div.table {	text-align: center;	margin: 20px 0px 20px 0px;}
