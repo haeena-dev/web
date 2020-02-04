@@ -60,11 +60,12 @@ p.note {
 	border-radius: 10px 10px 10px 10px / 10px 10px 10px 10px;
 }
 
-p.note-gray {
+p.note-black {
+	color: rgb(204, 204, 204);
+	background-color: rgb(45, 45, 45);
 	margin: 16px 30px 16px 30px;
-	background-color: #eeeeee;
 	padding: 10px 10px 10px 10px;
-	border: 2px solid rgb(170, 170, 170);
+	border: none;
 	border-radius: 10px 10px 10px 10px / 10px 10px 10px 10px;
 }
 
@@ -78,9 +79,9 @@ code.inline {
 }
 
 hr {
-	border-top: 2px solid rgb(180, 180, 180);
+	border-top: 1.5px solid rgb(180, 180, 180);
 	border-bottom: none;
-	margin: 0 0 0 0;
+	margin: 10px 0 10px 0;
 	padding: 0 0 0 0;
 }
 
