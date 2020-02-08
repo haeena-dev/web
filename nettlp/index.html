@@ -18,7 +18,7 @@
 
 	<h2> What is NetTLP? </h2>
 	<p>
-		NetTLP is a development platform for software PCIe devices that can interact with hardware root complxes.
+		NetTLP is a development platform for software PCIe devices that can interact with hardware root complexes.
 	</p>
 	<p>
 		Developers can program their own PCIe devices with IP packet processing and debug the DMA communication with powerful network tools like tcpdump and wireshark.
@@ -28,9 +28,37 @@
 	</p>
 
 	<div class="img">
-	  <a href="fig/nettlp.png"><img src="fig/nettlp.png" id="top-image"/></a>
+	  <a href="fig/nettlp.png">
+	    <img src="fig/nettlp.png" id="top-image"/>
+	  </a>
 	</div>
 
+	<p>
+	  On the NetTLP platform, substances of PCIe devices are
+	  implemented as software on top of a library, called LibTLP.
+	  LibTLP, which is a software implementation of PCIe
+	  Transaction Layer, provides a well-abstracted DMA API for
+	  the software devices, and sends and receives PCIe
+	  Transaction Layer Packetes (TLPs) over UDP/IP/Ethernet. The
+	  NetTLP adapter installed on a distant host receives TLPs
+	  from the software device, and then sends the TLPs to the
+	  root complex through the physical PCIe interconnect. TLPs
+	  sent from the root complex to the NetTLP adapter are
+	  delivered to the software device through the Ethernet link
+	  by encapsulating TLPs in UDP/IP/Ethernet likewise.
+	</p>
+
+	<p>
+	  So, you can implement your PCIe devices in software
+	  interacting with hardware root complexes.
+	</p>
+	<p>
+	  And, you can observe their interactions by powerful IP
+	  networking tools like tcpdump and wireshark.
+	</p>
+      </section>
+
+      <section>
 	<h3>Research Paper</h3>
 	<p>
 		Yohei Kuga, Ryo Nakamura, Takeshi Matsuya, and Yuji Sekiya.
