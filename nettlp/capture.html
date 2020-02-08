@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> NetTLP: Capturing TLPs </title>
+    <link rel="stylesheet" type="text/css" href="../css/web.css">
+    <link rel="stylesheet" type="text/css" href="../css/prism.css">
+  </head>
+  <body>
+
+    <header>
+      <h1><a href="index.html">NetTLP</a>: Capturing TLPs</h1>
+    </header>
+
+    <main>
+
+      <section>
+	<h2> Overview </h2>
+
+	<p>
+	  PCIe topologies and their communication modles are flexible:
+	  CPU-to-Device and Device-to-Device. By exploting
+	  Device-to-Device PCIe communications, as known as
+	  Peer-to-Peer DMA (P2P DMA), on a NetTLP platform, we can
+	  observe TLPs sent from commercial peripherals.
+	</p>
+
+      </section>
+
+      <section>
+	<h3> Capturing TLPs in NetTLP </h3>
+
+	<p>
+	  To capture TLPs sent from peripherals by NetTLP, it is
+	  necessary to change destination of DMAs from the peripheral:
+	  from main memory to BAR4 of the NetTLP adapter. It requires
+	  modifications for device drivers, but Linux provides helpers
+	  for such purposes
+	  (<a href="https://www.kernel.org/doc/html/latest/driver-api/pci/p2pdma.html">PCI
+	  Peer-to-Peer DMA Support &mdash; The Linux Kernel
+	  documentation</a>)
+	</p>
+
+	<p>
+	  Once TLPs go out into IP networks, we can capture the TLPs
+	  by tcpdump. Figure 1 shows an overview of a setup for
+	  capturing TLPs. An easy way to capture TLPs encapsualted in
+	  IP is to run tcpdump on a device host. Capturing TLPs on the
+	  device host is sufficient to observe contents of the TLPs.
+	  On the other hand, using port mirroring and another box
+	  enables observing them without affecting the performance of
+	  software PCIe devices on the device host from the software
+	  view. Moreover, using hardware RX time stamping on the box
+	  brings microsecond-scale observation for PCIe transactions.
+	</p>
+
+        <div class="img">
+          <a href="fig/capture-setup.png">
+	    <img src="fig/capture-setup.png"/></a>
+          <p>Figure 1: An overview of capturing TLPs.</p>
+        </div>
+
+      </section>
+
+      <section>
+	<h3> Examples </h3>
+
+	Figure 2 shows captured TLPs of two types of NICs: Intel X520
+	10Gbps NIC and Intel XL710 40 Gbps NIC. It is captured by port
+	mirroring and hardware RX time stamping. Both NICs tried to
+	sent 32 1500-byte packets with DMA Read, and the packets were
+	on the BAR4 of the NetTLP adapter where psmem ran.
+
+        <div class="img">
+          <a href="fig/capture-intel-nics.png">
+	    <img src="fig/capture-intel-nics.png"/></a>
+          <p>Figure 2: Captured TLPs of X520 and XL710 Ethernet NICs</p>
+        </div>
+	
+	As shown, X520 and XL710 utilize TLP tag fields differently
+	for achieving their desired bandwidth.
+
+      </section>
+
+    </main>
+    
+    <footer>
+      &copy; 2020 haeena.dev.
+    </footer>
+
+    <script type="text/javascript" src="../js/prism.js"></script>
+  </body>
+</html>
