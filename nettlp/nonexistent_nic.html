@@ -17,20 +17,20 @@
 	<h2> Overview </h2>
 	<p>
 	  On the NetTLP platform, you can develop your PCIe devices in
-	  software interacting with hardware root complex.  For an
-	  exmaple of such a software device, we introduce an
+	  software interacting with hardware root complexes.  For an
+	  example of such a software device, we introduce an
 	  implementation of <strong> simple NIC</strong>. The simple
 	  NIC, originally introduced
 	  by <a href="https://www.cl.cam.ac.uk/research/srg/netos/projects/pcie-bench/">pcie-bench</a>,
 	  is a theoretical model of a simplistic Ethernet NIC, which
 	  does not have any performance optimizations and complicated
 	  DMA interfaces, for understanding PCIe interactions and
-	  calucating bandwidth.  NetTLP enables implementing such
+	  calculating bandwidth.  NetTLP enables implementing such
 	  models of PCIe devices in software and confirming whether
 	  the models actually work with existent hardware root
 	  complex. In other words, the PCIe devices are certainly
 	  implemented in software, but they perform as actual devices
-	  for physical root complxes. Moreover, their PCIe
+	  for physical root complexes. Moreover, their PCIe
 	  transactions can be observed by tcpdump.
 	</p>
 
@@ -41,7 +41,7 @@
 	  here: <a href="https://github.com/pcie-bench/pcie-model/blob/master/model/simple_nic.py">https://github.com/pcie-bench/pcie-model/blob/master/model/simple_nic.py</a>. Our
 	  simple NIC implementation in NetTLP follows the steps of the
 	  PCIe interactions described in the source code. Anyway, this
-	  page focuses on how to setup and run the simple NIC on the
+	  page focuses on how to set up and run the simple NIC on the
 	  NetTLP platform.
 	</p>
 
@@ -51,9 +51,9 @@
 	<h2> Setup </h2>
 
 	<p>
-	  To run the simple NIC, please setup a NetTLP environment
+	  To run the simple NIC, please set up a NetTLP environment
 	  following the <a href="setup.html">instruction</a> and
-	  confirm <a href="example_apps.html">the exmaple applications
+	  confirm <a href="example_apps.html">the example applications
 	  work</a>.
 	</p>
 
@@ -61,14 +61,15 @@
 	  components among both adapter and device hosts: (1) a device
 	  driver for the NetTLP adapter and (2) the software device
 	  implementation for simple NIC using LibTLP. The driver
-	  treats the NetTLP adapter as an physical Ethernet NIC and
-	  create a netdevice interface (like usual Ethrenet interfaces
-	  in Linux as ifconfig command shows). Packets transmitted to
-	  the interface are delivered to the device host as TLPs over
-	  the PCIe links between the root complex and the NetTLP
-	  adapter, and the Ethernet link between the adapter host and
-	  device host. The simple NIC implementation receives the TLPs
-	  using LibTLP and send the packets to a tap interface.
+	  treats the NetTLP adapter as a physical Ethernet NIC and
+	  creates a netdevice interface (like usual Ethernet
+	  interfaces in Linux as ifconfig command shows). Packets
+	  transmitted to the interface are delivered to the device
+	  host as TLPs over the PCIe links between the root complex
+	  and the NetTLP adapter and the Ethernet link between the
+	  adapter host and device host. The simple NIC implementation
+	  receives the TLPs using LibTLP and sends the packets to a
+	  tap interface.
 	</p>
 
         <div class="img">
@@ -78,8 +79,8 @@
         </div>
 
 	<p>
-	  Figure 1 shows an exmaple setup of the simple NIC. Descriptions
-	  of network interfaces in the figure are:
+	  Figure 1 shows an example setup of the simple
+	  NIC. Descriptions of network interfaces in the figure are:
 	</p>
 
 	<ul>
@@ -93,7 +94,7 @@
 	    <li>
 	      eth2: netdevice interface for the simple NIC. The simple
 	      NIC driver for the NetTLP adapter creates this
-	      interface. Packets transmitted to eth2 are deliverred to
+	      interface. Packets transmitted to eth2 are delivered to
 	      the device host by encapsulating TLPs in Ethernet via
 	      the 10G Ethernet link between the adapter and the device
 	      host.
@@ -112,7 +113,7 @@
 	      the <a href="setup.html"> setup instruction</a>.
 	    </li>
 	    <li>
-	      tap0: the actual ethernet port of the simple NIC. the
+	      tap0: the actual ethernet port of the simple NIC. The
 	      simple NIC process on the device host creates this tap
 	      interface. Packets transmitted to eth2 (the NetTLP
 	      adapter) on the device host are transmitted from this
@@ -124,7 +125,7 @@
 	      br0: just a target interface to send ping. tap0 is
 	      enslaved by br0. As a result, packets transmitted to
 	      eth2 on the adapter host are transmitted from tap0 and
-	      received by br0. This means that we can ping between
+	      received by br0. It means that we can ping between
 	      eth2 on the adapter host (10.0.0.1) and br0 on the
 	      device host (10.0.0.2).
 	    </li>
@@ -251,11 +252,11 @@ eth2: flags=4098&lt;BROADCAST,MULTICAST&gt;  mtu 1500
 	<p class="note">
 	  <strong>Warning:</strong> DO NOT set eth2 up at this moment.
 	  simple-nic process, the substance of the simple NIC, must be
-	  running before eth2 up. If do that, the kernel tries to send
-	  packets, e.g., IPv6 router solicitation, and then the driver
-	  sends a MWr TLP to inform the device about a TX desciptor.
-	  However, there is no response from the device,
-	  becuase <i>the device</i>, which is the software simple-nic
+	  running before eth2 up. If doing that, the kernel tries to
+	  send packets, e.g., IPv6 router solicitation, and then the
+	  driver sends a MWr TLP to inform the device about a TX
+	  descriptor.  However, there is no response from the device,
+	  because <i>the device</i>, which is the software simple-nic
 	  process on the device host, has not been running yet.
 	  
 	</p>
@@ -302,7 +303,7 @@ Makefile  nettlp_snic_device  nettlp_snic_device.c
 	<p class="note">
 	  <strong>Note:</strong> In the current implementation, libtlp
 	  directory and simple-nic directory must be located on the
-	  same directory. I will develop an install procedure soom.
+	  same directory. I will develop an install procedure soon.
 	</p>
 
 	<p>
@@ -327,14 +328,14 @@ start nettlp callback
 
 	<p>
 	  -r and -l options are identical to
-	  the <a href="exmaple_apps.html">example applications</a>.
-	  192.168.10.1 is address of the NetTLP adapters, and
+	  the <a href="example_apps.html">example applications</a>.
+	  192.168.10.1 is the address of the NetTLP adapters, and
 	  192.168.10.3 is the local address connected to the adapter,
 	  which is eth1 in Figure 1. -R option specifies the IP
-	  address of the adpater host on the management network. When
+	  address of the adapter host on the management network. When
 	  nettlp_snic_device starts, it gathers necessary information
-	  from the adapter host, for exmaple, the address of BAR4 and
-	  IRQ infromations of the adapter. For this purpose,
+	  from the adapter host, for example, the address of BAR4 and
+	  IRQ information of the adapter. For this purpose,
 	  nettlp_snic_device uses a UDP-based simple messaging API
 	  implemented as a side-channel in the driver.
 	</p>
@@ -342,7 +343,7 @@ start nettlp callback
 	<p>
 	  If nettlp_snic_device successfully gets the information
 	  through the management network, it starts to perform the
-	  simple NIC: waiting TLPs following the PCIe interactions of
+	  simple NIC: waiting for TLPs following the PCIe interactions of
 	  the simple NIC model.
 	</p>
 
@@ -387,7 +388,7 @@ br0: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500
       <section>
 	<h3> ping</h3>
 	<p>
-	  Now we can set the simple NIC up at the adpater host.
+	  Now we can set the simple NIC up at the adapter host.
 	</p>
 
 	<pre><code class="language-shell-session">$ sudo ip addr add dev eth2 10.0.0.1/24
@@ -454,20 +455,20 @@ rtt min/avg/max/mdev = 0.239/0.260/0.297/0.031 ms
 </code></pre>
 
 	<p>
-	  This ping send an ICMP echo packet to eth2, and then the
+	  This ping sends an ICMP echo packet to eth2, and then the
 	  driver notifies nettlp_snic_device about the TX descriptor
 	  for the packet (MWr TLP). Then nettlp_snic_device starts DMA
-	  Read to read the descriptor, and reads the packet content
+	  Read to read the descriptor and reads the packet content
 	  specified by the descriptor. After nettlp_snic_device writes
-	  the packet to the tap interface, it sends a MWr TLP as the TX
-	  interrupt (MSI-X).
+	  the packet to the tap interface, it sends a MWr TLP as the
+	  TX interrupt (MSI-X).
 	</p>
 
 	<p>
 	  The corresponding ICMP reply packet is generated by the
 	  kernel on the device host when the echo is received by br0.
 	  nettlp_snic_device reads the reply packet from the tap
-	  interface, and starts to write the packet to the packet
+	  interface and starts to write the packet to the packet
 	  buffer on the adapter host by DMA Write. After the DMA
 	  Write, nettlp_snic_device sends a MWr TLP as the RX
 	  interrupt (MSI-X).
@@ -479,15 +480,15 @@ rtt min/avg/max/mdev = 0.239/0.260/0.297/0.031 ms
 	<h2>Observing the PCIe transactions</h2>
 	<p>
 	  The PCIe transactions between the driver and the device can
-	  be observed on the Ethernt link. This is one of the powerful
+	  be observed on the Ethernet link. This is one of the powerful
 	  functionalities of the NetTLP platform. Let us see the TLPs
 	  of the simple NIC.
 	</p>
 
 	<p>
-	  To see the TLPs, an easy way is to use
-	  the <a href="exmaple_apps.html">modified tcpdump</a> that
-	  can parse TLPs encapsualted in Ethernet, IP, UDP, and NetTLP
+	  An easy way to see the TLPs is to use
+	  the <a href="example_apps.html">modified tcpdump</a> that
+	  can parse TLPs encapsulated in Ethernet, IP, UDP, and NetTLP
 	  headers. Capture the eth1 on the device host using the
 	  tcpdump.
 	</p>
@@ -600,7 +601,7 @@ listening on eth1, link-type EN10MB (Ethernet), snapshot length 262144 bytes
 	</p>
 
 	<p>
-	  Next, the simple-nic start to read a 16-byte TX descriptor
+	  Next, the simple-nic starts to read a 16-byte TX descriptor
 	  pointed by the DMA write of the last MWr TLP. This TLP is
 	  it. The simple-nic (requester 1b:00 is PCIe bus number where
 	  the NetTLP adapter is installed) send MRd TLP for 16-byte
@@ -635,7 +636,7 @@ listening on eth1, link-type EN10MB (Ethernet), snapshot length 262144 bytes
 	</p>
 
 	<p>
-	  Next, as the step 4 on the TX side, the simple-nic reads the
+	  Next, as step 4 on the TX side, the simple-nic reads the
 	  actual packet to be sent from the main memory on the adapter
 	  host. 0x3bdc1000 is the address of the packet (skb->data, or
 	  skb_mac_header(skb)). len 25 means 100 bytes, but the Last
@@ -653,7 +654,7 @@ listening on eth1, link-type EN10MB (Ethernet), snapshot length 262144 bytes
 	</p>
 
 	<p>
-	  Then the root complex sends response for the DMA read for
+	  Then the root complex sends a response for the DMA read for
 	  the packet. After receiving this CplD TLP, the simple-nic
 	  sends the packet to a tap interface.
 	</p>
@@ -671,7 +672,7 @@ listening on eth1, link-type EN10MB (Ethernet), snapshot length 262144 bytes
 
 	<p>
 	  After transmitting the packet, the simple-nic generates a TX
-	  interrupt to infrom the driver of the completion of the
+	  interrupt to inform the driver of the completion of the
 	  transmission. In MSI-X, interrupt is implemented by just a
 	  MWr TLP to a specified address on main memory with a
 	  specified data. In this case, the address is 0xfee1a000.
@@ -692,7 +693,7 @@ listening on eth1, link-type EN10MB (Ethernet), snapshot length 262144 bytes
 	</p>
 
 	<p>
-	  On the RX side, the interaction starts from writing the
+	  On the RX side, the interaction starts with writing the
 	  received packet to the host memory (step 3) because the
 	  driver told the RX buffer to the simple-nic before receiving
 	  new packets. So, this first TLP means that the simple-nic
@@ -747,11 +748,11 @@ listening on eth1, link-type EN10MB (Ethernet), snapshot length 262144 bytes
 
 	<p>
 	  After the host consumed the received packet, the driver
-	  returns the RX buffer to the device. The drvier writes the
+	  returns the RX buffer to the device. The driver writes the
 	  freed RX queue tail pointer to the specified address on the
 	  BAR4 (0xb0000014) on the NetTLP adapter, and then simple-nic
-	  receives this MWr TLP. This is actually the step 1 on the RX
-	  side.
+	  receives this MWr TLP. This is actually the first on the RX
+	  side of the simple NIC model.
 	</p>
 
 	<hr/>

@@ -18,11 +18,12 @@
 	<p>
 	  A NetTLP platform is composed of two hosts: <strong>adapter
 	    host</strong> and <strong>device host</strong>. An adapter
-	    host has at least one FPGA-based NetTLP adapter and a
-	    device host performs software device, which is the
+	    host has at least one FPGA-based NetTLP adapter, and a
+	    device host performs a software device, which is the
 	    substance of the NetTLP adapter on the adapter host.  The
 	    hosts are connected by a 10Gbps Ethernet link between the
-	    NetTLP adapter and a normal 10Gbps NIC on the device host.
+	    NetTLP adapter and a regular 10Gbps NIC on the device
+	    host.
 	</p>
 
 	<div class="img">
@@ -45,7 +46,7 @@
 	<h3> Install NetTLP Adapter </h3>
 	<p>
 	  Install a NetTLP adapter to a PCIe slot, and program The
-	  adapter via Vivado. the bit file can be found at
+	  adapter via Vivado. The bit file can be found at
 	  <a href="https://github.com/NetTLP/adapter/releases">
 	    https://github.com/NetTLP/adapter/releases</a>.  After
 	  booting the adapter host, you can see a device with vendor
@@ -71,7 +72,7 @@ $ sudo lspci -v -d 3776:8022
 	  The current NetTLP adapter (v0.17) has three Base Address
 	  Registers (BAR). BAR0 is used to store adapter specific
 	  information (i.e., MAC address and IP address), and BAR2 is
-	  sued to store MSI-X table. BAR4 is quite special:
+	  used to store MSI-X table. BAR4 is quite special:
 	  Transaction Layer Packets (TLPs) to the BAR are encapsulated
 	  in Ethernet, IP, and UDP headers, and transmitted to the
 	  device host via the 10Gbps Ethernet Link. In the above
@@ -85,11 +86,10 @@ $ sudo lspci -v -d 3776:8022
 	<p>
 	  Next, install a NetTLP basic driver found
 	  at <a href="https://github.com/nettlp/driver">
-	    https://github.com/nettlp/driver</a>. This
-	  driver just enables the NetTLP adapter by the Linux way, and
-	  it provides a simple messaging API to obtain adapter
-	  infromation (i.e., bus and slot number, and BAR4 address)
-	  from the device host.
+	  https://github.com/nettlp/driver</a>. This driver just
+	  enables the NetTLP adapter by the Linux way, and it provides
+	  a simple messaging API to obtain adapter information (i.e.,
+	  bus and slot number, and BAR4 address) from the device host.
 	</p>
 
 	<pre><code class="language-shell-session">$ mkdir nettlp
@@ -199,14 +199,14 @@ $ sudo insmod nettlp.ko
 	<h3> Setup connection between device host and NetTLP adapter </h3>
 	<p>
 	  Connect the device host to the NetTLP adapter on the adapter
-	  host by 10Gbps Ethernet link like shown in Figure 1. The
+	  host by 10Gbps Ethernet link, like shown in Figure 1. The
 	  NetTLP adapter always sends light during board power is on,
 	  so that only <code class="inline">ip link set dev ethX
 	  up</code> is required to bring the link up.
 	</p>
 
 	<p>
-	  Next step is to setup a static ARP entry. The current
+	  The next step is to setup a static ARP entry. The current
 	  implementation of NetTLP adapter (v0.17) does not respond to
 	  ARP requests. Thus, the device host needs to have a static
 	  ARP entry for the connected NetTLP adapter.
@@ -215,12 +215,12 @@ $ sudo insmod nettlp.ko
 	<p class="note">
 	  <strong>Note:</strong> default MAC address and IP address of
 	  current NetTLP adapter are 00:11:22:33:44:55 and
-	  192.168.10.1. In addition, the NetTLP adapter uses
-	  FF:FF:FF:FF:FF:FF and 192.168.10.3 as default destination
-	  addresses for encapsulation.
+	  192.168.10.1. The NetTLP adapter uses FF:FF:FF:FF:FF:FF and
+	  192.168.10.3 as default destination addresses for
+	  encapsulation.
 	  <a href="adapter.html"> They can be changed</a>. These
 	  addresses are used for only TLP encapsulation and
-	  decapsulation, not used for network stack of the adapter
+	  decapsulation, not used for the network stack of the adapter
 	  host. Thus, this address (192.168.10.1 as default) does not
 	  respond to any packets except NetTLP packets.
 	</p>
@@ -246,7 +246,7 @@ $ ip nei show 192.168.10.1
 	  from <a href="https://github.com/nettlp/libtlp">
 	    https://github.com/nettlp/libtlp</a>.
 	  The LibTLP repository contains a shared library called
-	  libtlp and sampel applications such as dma_read, pmem, and
+	  libtlp and sample applications such as dma_read, pmem, and
 	  tlpperf.
 	</p>
 

@@ -16,9 +16,9 @@
       <section>
 	<h2> Overview </h2>
 	<p>
-	  This section shows how to play exmaple applications of
+	  This section shows how to play example applications of
 	  LibTLP on a NetTLP platform. To build a NetTLP platform,
-	  please see <a href="setup.html">setup</a>.
+	  please see the <a href="setup.html">setup</a>.
 	</p>
 
 	<p>
@@ -40,7 +40,7 @@
 	  and install a
 	  modified <a href="https://github.com/nettlp/tcpdump">
 	  tcpdump</a>, which can distinguish and display TLPs
-	  encapsualted in Ethernet/IP by NetTLP.
+	  encapsulated in Ethernet/IP by NetTLP.
 	</p>
 
 	<pre><code class="language-shell-session">$ sudo apt install libpcap-dev
@@ -77,7 +77,7 @@ usage
 	<p>
 	  -r and -l options specify remote and local addresses on the
 	  Ethernet link between adapter and device hosts from the
-	  viewpoint of LibTLP: remote means NetTLP adpater and local
+	  viewpoint of LibTLP: remote means NetTLP adapter and local
 	  means LibTLP (device host's IP address). Namely, -r
 	  192.168.10.1 and -l 192.168.10.3 at the
 	  example <a href="setup.html">setup</a>. -b is bus number
@@ -148,10 +148,10 @@ test _str ing
 	<p>
 	  At that moment, dma_read (actually LibTLP) made a MRd TLP
 	  and sent it to the NetTLP adapter over the Ethernet link,
-	  and the adapter decapsulated it and devliered the original
+	  and the adapter decapsulated it and delivered the original
 	  (inner) TLP to the root complex at the adapter host over the
 	  PCIe links. Afterward, the root complex sent a corresponding
-	  CplD TLP to the adapter, and then the adapter encapsualted
+	  CplD TLP to the adapter, and then the adapter encapsulated
 	  the TLP and sent it to the device host.
 	</p>
 
@@ -288,7 +288,7 @@ $ sudo ./memory 0xa0000000
 </code></pre>
 
 	<p>
-	  Then, the memory command preiodically access the region
+	  Then, the memory command periodically access the region
 	  started from 0xa0000000, the BAR4 space of the NetTLP
 	  adapter, by 1 byte, and you can see and modify memories
 	  through the curses-based user interface. Meanwhile, you see
@@ -315,7 +315,7 @@ listening on eth1, link-type EN10MB (Ethernet), snapshot length 262144 bytes
 
 	<p class="note">
 	  <strong>Note:</strong> the memory command reads each 1 byte
-	  continously. Such accuess patterns issue continuous MRd TLPs
+	  continuously. Such access patterns issue continuous MRd TLPs
 	  to LibTLP at a hardware-level speed. As a result, the
 	  current LibTLP implementation that uses the traditional
 	  socket can not send response CplD TLPs immediately.  This
