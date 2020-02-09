@@ -17,8 +17,8 @@
 	<h2> Overview </h2>
 
 	<p>
-	  PCIe topologies and their communication modles are flexible:
-	  CPU-to-Device and Device-to-Device. By exploting
+	  PCIe topologies and their communication models are flexible:
+	  CPU-to-Device and Device-to-Device. By exploiting
 	  Device-to-Device PCIe communications, as known as
 	  Peer-to-Peer DMA (P2P DMA), on a NetTLP platform, we can
 	  observe TLPs sent from commercial peripherals.
@@ -30,11 +30,11 @@
 	<h3> Capturing TLPs in NetTLP </h3>
 
 	<p>
-	  To capture TLPs sent from peripherals by NetTLP, it is
-	  necessary to change destination of DMAs from the peripheral:
-	  from main memory to BAR4 of the NetTLP adapter. It requires
-	  modifications for device drivers, but Linux provides helpers
-	  for such purposes
+	  For capturing TLPs sent from peripherals by NetTLP, it is
+	  necessary to change destinations of DMAs from the
+	  peripheral: from main memory to BAR4 of the NetTLP
+	  adapter. It requires modifications for device drivers, but
+	  Linux provides helpers for such purposes
 	  (<a href="https://www.kernel.org/doc/html/latest/driver-api/pci/p2pdma.html">PCI
 	  Peer-to-Peer DMA Support &mdash; The Linux Kernel
 	  documentation</a>)
@@ -43,14 +43,15 @@
 	<p>
 	  Once TLPs go out into IP networks, we can capture the TLPs
 	  by tcpdump. Figure 1 shows an overview of a setup for
-	  capturing TLPs. An easy way to capture TLPs encapsualted in
+	  capturing TLPs. An easy way to capture TLPs encapsulated in
 	  IP is to run tcpdump on a device host. Capturing TLPs on the
-	  device host is sufficient to observe contents of the TLPs.
-	  On the other hand, using port mirroring and another box
-	  enables observing them without affecting the performance of
-	  software PCIe devices on the device host from the software
-	  view. Moreover, using hardware RX time stamping on the box
-	  brings microsecond-scale observation for PCIe transactions.
+	  device host is sufficient to observe the contents of the
+	  TLPs.  On the other hand, using port mirroring and another
+	  box enables observing them without affecting the performance
+	  of software PCIe devices on the device host from the
+	  software view. Moreover, using hardware RX time stamping on
+	  the box brings microsecond-scale observation for PCIe
+	  transactions.
 	</p>
 
         <div class="img">
@@ -64,11 +65,22 @@
       <section>
 	<h3> Examples </h3>
 
-	Figure 2 shows captured TLPs of two types of NICs: Intel X520
-	10Gbps NIC and Intel XL710 40 Gbps NIC. It is captured by port
-	mirroring and hardware RX time stamping. Both NICs tried to
-	sent 32 1500-byte packets with DMA Read, and the packets were
-	on the BAR4 of the NetTLP adapter where psmem ran.
+	<p>
+	  Figure 2 shows captured TLPs of two types of NICs: Intel
+	  X520 10Gbps NIC and Intel XL710 40 Gbps NIC. It is captured
+	  by port mirroring and hardware RX time stamping at a Linux
+	  box. Both NICs tried to send 32 1500-byte packets with DMA
+	  Read, and the packets were on the BAR4 of the NetTLP adapter
+	  where psmem at the device host was associated.
+	</p>
+
+	<p>
+	  In this experiment, we prepared Linux kernel 4.20.2 with the
+	  PCI_P2PDMA option that enables the P2P DMA support.
+	  Moreover, for changing destinations of DMA reads from the
+	  NICs on the main memory to the BAR4 on the NetTLP adapter,
+	  we used netmap and modified ixgbe and i40e netmap drivers.
+	</p>
 
         <div class="img">
           <a href="fig/capture-intel-nics.png">
@@ -77,7 +89,7 @@
         </div>
 	
 	As shown, X520 and XL710 utilize TLP tag fields differently
-	for achieving their desired bandwidth.
+	for achieving their desired bandwidth, for example.
 
       </section>
 
