@@ -101,10 +101,11 @@ li { margin: 0.5em 0 0.5em 0; }
 
 
 /* Image: use <div class="img"> as a wrapper for <img> */
-div.img	{	text-align: center;	margin: 20px 0px 20px 0px; }
+div.img	{	text-align: center;	margin: 30px 0px 30px 0px; }
 div.img img {	max-width: 100%;	margin: 0 0 0 0; }
 div.img p {	margin: 10px 0 0 0;	}
-div.img #top-image { max-width: 75%; margin-top: 20px; }
+div.img img.size75 { max-width: 75%; }
+div.img img.size50 { max-width: 50%; }
 
 /* Table: use <div class="table"> as a wrapper for <table> */
 div.table {	text-align: center;	margin: 20px 0px 20px 0px;}
