@@ -67,19 +67,23 @@
 
 	<p>
 	  Figure 2 shows captured TLPs of two types of NICs: Intel
-	  X520 10Gbps NIC and Intel XL710 40 Gbps NIC. It is captured
-	  by port mirroring and hardware RX time stamping at a Linux
-	  box. Both NICs tried to send 32 1500-byte packets with DMA
-	  Read, and the packets were on the BAR4 of the NetTLP adapter
-	  where psmem at the device host was associated.
+	  X520 10Gbps NIC and Intel XL710 40 Gbps NIC. They are
+	  captured by port mirroring and hardware RX time stamping at
+	  a Linux box. Both NICs tried to send 32 1500-byte packets
+	  with DMA Read, and the packets were on the BAR4 of the
+	  NetTLP adapter where psmem at the device host was
+	  associated.
 	</p>
 
 	<p>
 	  In this experiment, we prepared Linux kernel 4.20.2 with the
 	  PCI_P2PDMA option that enables the P2P DMA support.
-	  Moreover, for changing destinations of DMA reads from the
-	  NICs on the main memory to the BAR4 on the NetTLP adapter,
-	  we used netmap and modified ixgbe and i40e netmap drivers.
+	  Moreover, we
+	  used <a href="https://github.com/luigirizzo/netmap">netmap</a>
+	  and modified ixgbe and i40e netmap drivers for changing
+	  destinations of DMA reads from the NICs from the main memory
+	  to the BAR4 on the NetTLP adapter,
+
 	</p>
 
         <div class="img">
