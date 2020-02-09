@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> NetTLP: Memory Introspection </title>
+    <link rel="stylesheet" type="text/css" href="../css/web.css">
+    <link rel="stylesheet" type="text/css" href="../css/prism.css">
+  </head>
+  <body>
+
+    <header>
+      <h1> <a href="index.html">NetTLP</a>: Memory Introspection </h1>
+    </header>
+
+    <main>
+
+      <section>
+	<h2> Overview </h2>
+	<p>
+	  The NetTLP adapter can be considered as a channel to
+	  manipulate the host memory from a remote host. So,
+	  researchers and developers can implement their memory
+	  introspection methods for physical machines on top of LibTLP
+	  and IP network stack without special hardware dedicated to
+	  the methods (excluding the NetTLP adapter).
+	</p>
+      </section>
+
+      <section>
+	<h3> An example, process-list </h3>
+
+	<p>
+	  As an example of diverting NetTLP for physical memory
+	  introspection, we introduce <strong>process-list</strong>
+	  command. It is very similar to (and inspired from) an
+	  example of <a href="http://libvmi.com/">LibVMI</a>, but our
+	  process-list command works for physical machines.  The
+	  LibTLP repository contains the process-list implementation.
+	  So, for trying physical memory introspection, set up a
+	  NetTLP environment with <a href="setup.html"> getting
+	  started</a> first.
+	</p>
+
+	<p>
+	  After setting up your NeTTLP environment, you see the process-list
+	  command in libtlp/apps directory.
+	</p>
+
+	<pre><code class="language-shell-session">$ ls libtlp/apps/
+Makefile    dma_read	 pgd-walk        psmem                    tlpperf.c
+README.md   dma_read.c	 pgd-walk.c      psmem.c                  util.h
+codedump    dma_write	 process-list	 thread_affinity_apple.h
+codedump.c  dma_write.c  process-list.c  tlpperf
+</code></pre>
+
+	<p>
+	  The process-list command is executed on the device host. It
+	  gathers process information from the adapter host by DMA
+	  reads through the NetTLP adapter. As a starting point, it
+	  needs System.map file of the target host. So, copy
+	  <code class="inline">/boot/System.map-`uname -r`</code> from
+	  the adapter host to the device host.
+	  More specifically, the process-list command finds an address
+	  of task_struct representing the first process (swapper with
+	  PID 0) from the specified System.map and then starts to walk
+	  through task_struct structures of the adapter host using
+	  DMA reads.
+	</p>
+	
+	<p>
+	  After bringing the System.map file to the device host, we
+	  can execute the process-list command as with
+	  the <code class="inline">dma_read</code> command explained
+	  at the <a href="example_apps.html">Example applications</a>
+	  page.
+	</p>
+
+	<pre><code class="language-shell-session">$ ./process-list -r 192.168.10.1 -b 1b:00 -s System.map
+PhyAddr             PID STAT COMMAND
+0x00000003411740      0 R    swapper/0
+0x0000087c331dc0      1 S    systemd
+0x00000874961dc0    656 S    lvmetad
+0x000008748cbb80   1046 S    irqbalance
+0x000008748c8000   1048 S    atd
+0x000008748cd940   1053 S    lxcfs
+0x0000086ac71dc0   1071 S    rsyslogd
+0x0000086cd05940   1086 S    accounts-daemon
+0x00000869300000   1089 S    snapd
+0x00000869301dc0   1097 S    networkd-dispat
+0x00000869305940   1098 S    dbus-daemon
+0x00000871255940   1143 S    systemd-logind
+0x00000877538000   1152 S    cron
+0x00000877539dc0   1156 S    sshd
+0x0000082a548000  19529 S    sshd
+0x00000876811dc0  19648 S    sshd
+0x00000874a4bb80  19649 S    zsh
+0x0000087753d940   1206 S    polkitd
+0x00000869521dc0   1261 S    agetty
+0x00000878109dc0   1539 S    unattended-upgr
+0x000007a8498000  21461 S    systemd-udevd
+0x000008746e8000  30382 S    systemd-network
+0x00000878498000  30417 S    systemd-resolve
+0x0000087849d940  30440 S    systemd-timesyn
+0x00000878499dc0  30468 S    systemd-journal
+0x0000087769d940  19531 S    systemd
+0x00000874be3b80  19532 S    (sd-pam)
+0x0000087c335940      2 S    kthreadd
+0x0000087c333b80      3 D    rcu_gp
+0x0000087c330000      4 D    rcu_par_gp
+0x0000087c353b80      6 D    kworker/0:0H
+0x0000087c351dc0      8 D    mm_percpu_wq
+0x0000087c399dc0      9 S    ksoftirqd/0
+0x0000087c39d940     10 D    rcu_sched
+
+... snipped ...
+</code></pre>
+
+      </section>
+
+    </main>
+
+    <footer>
+      &copy; 2020 haeena.dev.
+    </footer>
+
+    <script type="text/javascript" src="../js/prism.js"></script>
+  </body>
+</html>
+
