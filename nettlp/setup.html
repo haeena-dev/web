@@ -39,8 +39,8 @@
 	<h3> Requirement of adapter host </h3>
 	<ul> 
 	  <li> OS: Ubuntu 18.04 </li>
-	  <li> x1 PCIe Gen2 x16 slot </li>
-	  <li> Vivado XXXX (<strong>TBD</strong>) </li>
+	  <li> Xilinx KC705 Eval board (EK-K7-KC705-G) </li>
+	  <li> Xilinx Vivado 19.2 </li>
 	</ul>
 
 	<h3> Install NetTLP Adapter </h3>
@@ -51,6 +51,9 @@
 	    https://github.com/NetTLP/adapter/releases</a>.  After
 	  booting the adapter host, you can see a device with vendor
 	  ID 3776:8022.
+	  This bit file is created with the evaluation version Ethernet-10G MAC license.
+	  Therefore the adapter stops after one day.
+	  Please reload the bit file to the FPGA board when the adapter stops.
 	</p>
 
 	<pre><code class="language-shell-session">$ lspci -d 3776:8022
