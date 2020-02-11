@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> NetTLP: LibTLP </title>
+    <link rel="stylesheet" type="text/css" href="../css/web.css">
+    <link rel="stylesheet" type="text/css" href="../css/prism.css">
+  </head>
+  <body>
+
+    <header>
+      <h1> <a href="index.html">NetTLP</a>: LibTLP </h1>
+    </header>
+
+    <main>
+
+      <section>
+        <h2> Overview </h2>
+        <p>
+	  LibTLP is a userspace library that implements the PCIe
+	  transaction layer. The current implementation works on top
+	  of Linux UDP sockets. Your software PCIe devices can
+	  interact with hardware root complexes, CPU, memory, other
+	  peripherals through a well-abstracted DMA API provided by
+	  LibTLP and a NetTLP adapter.
+	</p>
+	<p>
+	  The source code is
+	    here: <a href="https://github.com/nettlp/libtlp">
+	    https://github.com/nettlp/libtlp</a>.
+	</p>
+      </section>
+
+      <section>
+	<h2> Compile and Install </h2>
+	<p>
+	  Please see <a href="setup.html">getting started</a> to
+	  compile LibTLP. Actually, <code class="inline">git
+	  clone</code> and <code class="inline">make</code>.
+	</p>
+	<p>
+	  libtlp/include/ contains two header files: tlp.h for
+	  structures describing PCIe Transaction Layer
+	  Packets. libtlp.h is the header file for libtlp. After
+	  compiling LibTLP, libtlp.a exists on libtlp/lib directory.
+	  Please use libltp.h and libtlp.a for your
+	  uses. <code class="inline">sudo make install</code> installs
+	  them into /usr/local/include and /usr/local/lib.
+	</p>
+      </section>
+
+
+      <section>
+	<h2> DMA API</h2>
+
+	<p>
+	  The DMA API of LibTLP is shown below:
+	</p>
+
+	<pre><code class="language-c">ssize_t dma_read(struct nettlp *nt, uintptr_t addr, void *buf, size_t count);
+ssize_t dma_write(struct nettlp *nt, uintptr_t addr, void *buf, size_t count);
+</code></pre>
+
+	<p>
+	  The DMA API of LibTLP is inspired from read(2) and write(2)
+	  system calls. As with these system calls, dma_read()
+	  attempts to read up to <code class="inline">count</code>
+	  bytes into <code class="inline">buf</code> and dma_write()
+	  writes up to <code class="inline">count</code> bytes from
+	  <code class="inline">buf</code>. <code class="inline">addr</code>
+	  indicates a target address of DMA transaction. The return
+	  values of the functions are the number of bytes read or
+	  written, or -1 and errno is set on error as with the system
+	  calls.
+	</p>
+
+	<p>
+	  dma_read() and dma_write() do not care MaxReadRequestSize
+	  (MRRS) and MaxPayloadSize (MPS). Instead, dma_read_aligned()
+	  and dma_write_aligned() align a request into small-sized
+	  requests.
+	</p>
+
+	<pre><code class="language-c">ssize_t dma_read_aligned(struct nettlp *nt, uintptr_t addr, void *buf,
+                         size_t count, size_t mrrs);
+ssize_t dma_write_aligned(struct nettlp *nt, uintptr_t addr, void *buf,
+                          size_t count, size_t mps);
+</code></pre>
+
+      </section>
+
+      <section>
+	<h3> Example </h3>
+	<p>
+	  libtlp/apps directory contains example applications of
+	  LibTLP, especially, example.c is a very simple example to
+	  learn how to use LibTLP.
+	</p>
+
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;arpa/inet.h&gt;
+#include &lt;libtlp.h&gt;
+
+int main(int argc, char **argv)
+{
+	int ret;
+	char buf[128];
+	uintptr_t addr = 0x0;
+	struct nettlp nt;
+
+	inet_pton(AF_INET, "192.168.10.1", &nt.remote_addr);
+	inet_pton(AF_INET, "192.168.10.3", &nt.local_addr);
+	nt.requester = (0x1a << 8 | 0x00);
+	nt.tag = 0;
+
+	nettlp_init(&nt);
+
+	ret = dma_read(&nt, addr, buf, sizeof(buf));
+	if (ret < 0) {
+		perror("dma_read");
+		return ret;
+	}
+
+	printf("DMA read: %d bytes from 0x%lx\n", ret, addr);
+	return 0;
+}</code></pre>
+
+<pre><code class="language-shell-session">$ ./example
+DMA read: 128 bytes from 0x0
+</code></pre>
+
+	<p>
+	  Note that a driver for the NetTLP adapter must be loaded
+	  before issuing DMA, and requester ID must matches PCIe bus
+	  number where the NetTLP adapter is installed.
+	</p>
+
+      </section>
+
+
+
+      <section>
+	<h2> Callback API </h2>
+	<p>
+	  The DMA API enables sending requests to the adapter host.
+	  On the other hand, receiving TLPs sent from the adapter
+	  host, LibTLP provides a callback API.
+	</p>
+
+	<pre><code class="language-c">struct nettlp_cb {
+        int (*mrd)(struct nettlp *nt, struct tlp_mr_hdr *mh, void *arg);
+        int (*mwr)(struct nettlp *nt, struct tlp_mr_hdr *mh,
+                   void *m, size_t count, void *arg);
+        int (*cpl)(struct nettlp *nt, struct tlp_cpl_hdr *ch, void *arg);
+        int (*cpld)(struct nettlp *nt, struct tlp_cpl_hdr *ch,
+                    void *m, size_t count, void *arg);
+        int (*other)(struct nettlp *nt, struct tlp_hdr *tlp, void *arg);
+};
+
+int nettlp_run_cb(struct nettlp **nt, int nnts,
+                  struct nettlp_cb *cb, void *arg);
+void nettlp_stop_cb(void);
+</code></pre>
+
+	<p>
+	  Registered functions are invoked when receiving TLPs.
+	  libtlp/apps/psmem
+	  and <a href="nonexistent_nic.html">simple-nic</a> are
+	  examples that use the callback API.
+	</p>
+
+
+      </section>
+
+
+
+
+    </main>
+
+
+    <footer>
+      &copy; 2020 haeena.dev.
+    </footer>
+
+    <script type="text/javascript" src="../js/prism.js"></script>
+  </body>
+</html>
