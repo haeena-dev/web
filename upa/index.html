@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> Ryo Nakamura at haeena.net/.dev </title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-44SYW2SJCC"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('consent', 'default', {'analytics_storage': 'denied'});
+      gtag('js', new Date());
+      gtag('config', 'G-44SYW2SJCC');
+    </script>
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous" />
+
+    <style type="text/css">
+<!--
+:root {
+    --background-color: #fefefe;
+    --border-color: #d0d0d0;
+}
+
+body {
+    background-color: var(--background-color);
+    color: #353535;
+    font-size: 0.9em;
+    font-family: Verdana, sans-serif;
+
+    max-width: 1000px;
+    margin: 50px 30px 0px 30px;
+
+    text-size-adjust: 150%;
+    -webkit-text-size-adjust: 150%;
+}
+
+main {}
+article     { margin-bottom: 30px; }
+
+h4.mark {
+    font-size: 1em;
+    font-weight: normal;
+    margin: 25px 0 15px 0;
+}
+
+
+ol { margin: 0px 0 20px 0; }
+li { margin: 0.6em 0 0.6em 0; }
+.self { text-decoration: underline; }
+.strong { font-weight: bold; color: #555555; }
+
+a { color: #0088cc;  text-decoration: none; }
+a:hover { color: #005580; }
+
+
+.publication {
+    padding-left: 20px;
+}
+
+.publication-list {
+    border-top: 4px solid var(--border-color);
+    border-bottom: 4px solid var(--border-color);
+}
+.publication-list ol li { margin: 0.9em 0 0.9em 0; }
+
+.switch {
+    overflow: hidden;
+}
+.toggle-switch {
+    float: left;
+    width: 120px;
+    display: block;
+    padding: 2px 0 2px 0;
+    text-align: center;
+    border-radius: 8px 8px 0 0;
+    border-top: 2px solid var(--background-color);
+    border-left: 2px solid var(--background-color);
+    border-right: 2px solid var(--background-color);
+    border-bottom: none;
+}
+
+a.toggle-switch.disabled {
+    color: #353535;
+    text-decoration: none;
+    pointer-events: none;
+    background-color: var(--border-color);
+    border-top: 2px solid var(--border-color);
+    border-left: 2px solid var(--border-color);
+    border-right: 2px solid var(--border-color);
+    border-bottom: none;
+}
+
+
+footer {
+  margin: 80px 0 30px 0;
+  text-align: right;
+}
+-->
+    </style>
+  </head>
+
+  <body>
+
+   <script type="text/javascript">
+     function lastmod() {
+	 var mod = new Date(document.lastModified);
+	 //mod.setMinutes(mod.getMinutes() - new Date().getTimezoneOffset());
+	 var opt = { year: "numeric", month: "numeric", day: "numeric",
+		     hour: "2-digit", minute: "2-digit",
+		     timeZoneName: "short" };
+	 document.write(new Intl.DateTimeFormat("ja-JP", opt).format(mod));
+     }
+
+     function toggle_display(obj) {
+	 obj.style.display = obj.style.display === "none" ? "" : "none";
+     }
+
+     function toggle(target_class) {
+	 var pub = document.getElementsByClassName(target_class);
+	 var pubs = pub[0].getElementsByTagName("li");
+	 for (var n = 0; n < pubs.length; n++) {
+	     if (!pubs[n].classList.contains("selected"))
+		 toggle_display(pubs[n]);
+	 }
+
+	 var visible = false;
+	 for (var n = 0; n < pubs.length; n++) {
+	     if (pubs[n].style.display == "") {
+		 visible = true;
+		 break;
+	     }
+	 }
+	 if (visible)
+	     pub[0].style.display = "";
+	 else
+	     pub[0].style.display = "none";
+     }
+
+     function toggle_class(obj, classname) {
+	 if (obj.classList.contains(classname))
+	     obj.classList.remove(classname);
+	 else
+	     obj.classList.add(classname);
+     }
+
+     function toggle_publications() {
+
+	 var toggles = document.getElementsByClassName("toggle-switch");
+	 for (var n = 0; n < toggles.length; n++) {
+	     toggle_class(toggles[n], "disabled");
+	 }
+
+	 toggle("journal");
+	 toggle("international");
+	 toggle("poster");
+	 toggle("domestic");
+	 toggle("misc");
+	 toggle("thesis");
+	 toggle("presentation");
+     }
+
+
+    </script>
+
+
+    <main>
+
+      <article>
+	<h4 class="mark">
+	  <i class="fas fa-user"></i> Ryo Nakamura / 中村 遼:
+	</h4>
+	<ul>
+	  <li> A researcher/engineer in the field of information
+	    technology </li>
+	  <li> Research Topics: IP Networking, OS Network Subsystem,
+	    and Network Operation
+	  </li>
+	  <li> Affiliation: The University of Tokyo / 東京大学 </li>
+	</ul>
+      </article>
+
+
+      <article>
+	<h4 class="mark"><i class="fas fa-inbox"></i> Mail: </h4>
+	<ul>
+	  <li> upa _at_ haeena.net, wide.ad.jp, nc.u-tokyo.ac.jp </li>
+	</ul>
+      </article>
+
+
+      <article>
+	<h4 class="mark"><i class="fas fa-suitcase"></i> Work: </h4>
+	
+	<ul>
+	  <li> Aug. 2022 - : Associate Professor at 
+	    <a href="http://www.itc.u-tokyo.ac.jp/">
+	      Information Technology Center</a>,
+	    the University of Tokyo.
+	  </li>
+	  <li> May. 2018 - : Visiting Researcher
+	    at <a href="https://www.sonycsl.co.jp/"> Sony Computer
+	      Science Lab</a>. </li>
+	</ul>
+
+	<ul>
+	  <li> Oct. 2017 - Jul. 2022: Research
+	    Associate at <a href="http://www.itc.u-tokyo.ac.jp/">
+	    Information Technology Center</a>, the University of
+	    Tokyo.
+	  </li>
+	  <li> Apr. 2017 - Sep. 2017: Post-Doctoral
+	    Researcher at <a href="http://www.hongo.wide.ad.jp"> Esaki
+	    Lab</a>, the University of Tokyo.</li>
+	  <li> Nov. 2013 - Mar. 2017: Research Assistant
+	    at <a href="http://www.sekiya-lab.info/"> Yuji Sekiya
+	    Lab</a>, the University of
+	    Tokyo. </li>
+	  <li> Oct. 2010 - Mar. 2017: Network admin assistant
+	    at <a href="https://www.sonycsl.co.jp/"> Sony Computer
+	      Science Lab</a>. </li>
+	</ul>
+	
+      </article>
+
+
+      <article>
+	<h4 class="mark"><i class="fas fa-wrench"></i>
+	  Other network-related work:
+	</h4>
+
+	<ul>
+	  <li> An operator of AS2500 and AS2501 </li>
+	  <li> <a href="http://interop.jp/"> Interop Tokyo </a>
+	    ShowNet 2012-2024 NOC team member (mainly L2/L3, and SDN
+	    (~2016))
+	  </li>
+	  <li>
+	    Visiting <a href="http://icube-reseaux.unistra.fr/en/index.php/Home">iCUBE Network Research Team</a>, University of Strasbourg
+	    (Oct - Nov, 2019)
+	  </li>
+	  <li>
+	    <a href="https://www.ietf.org/meeting/94/index.html">
+	      IETF 94 Yokohama</a> (Nov 1-6, 2015) NOC team
+	  </li>
+	</ul>
+
+	<ul>
+	  <li>
+	    <a href="https://pam2022.nl/"> PAM 2022 </a> TPC member
+	  </li>
+	  <li>
+	    <a href="https://interlab.ait.ac.th/aintec2018/"> AINTEC 2018 </a>
+	    TPC member
+	  </li>
+	  <li>
+	    <a href="https://netdevconf.org/1.2/"> NetDev 1.2, 2016 </a>
+	    Organization Committee/Web Chair
+	  </li>
+	</ul>
+
+      </article>
+
+
+      <article>
+	<h4 class="mark"><i class="fas fa-external-link-alt"></i> Link: </h4>
+	<ul>
+	  <li> <i class="fab fa-github"></i>
+	    GitHub: <a href="https://github.com/upa" target="_blank">
+	      https://github.com/upa </a> </li>
+	  <li><i class="fas fa-location-arrow"></i>
+	    Lab page: <a href="https://haeena.dev/upa/lab/" target="_blank">
+	      https://haeena.dev/upa/lab/ </a></li>
+	</ul>
+      </article>
+
+      
+      <article>
+	<h4 class="mark"><i class="fas fa-pencil-alt"></i> Publications: </h4>
+
+
+	<div class="publication">
+
+	  <div class="switch">
+	    <a href="javascript:toggle_publications();"
+	       class="toggle-switch ">
+	      Selected </a>
+	    <a href="javascript:toggle_publications();"
+	       class="toggle-switch disabled">
+	      All </a>
+	  </div>
+
+	  <div class="publication-list">
+	    <div class="journal">
+	      <h4 class="mark"><i class="fas fa-book"></i>
+		Journal: </h4>
+	      <ol>
+
+		<li>
+		  <span class="self">Ryo Nakamura</span>, Kentaro Ebisawa, Hideaki Hayashi, Tatsuya Fujiwara and Tomoko Okuzawa. Exploiting SRv6 for Stateless and Per-Connection-Consistent Load Balancing, in IEEE Access, vol. 12, pp. 83525-83537, 2024, doi: 10.1109/ACCESS.2024.3413016.
+		</li>
+
+		<li>
+		  <span class="self">中村 遼</span>, 海老澤 健太郎, 奥澤 智子, 李 忠翰, 関谷 勇司. ECMPの拡張によるハードウェアロードバランサの提案. 情報処理学会論文誌, vol. 65-3, pp. 635-645, 2024年3月15日
+		</li>
+
+		<li>
+		  空閑 洋平, <span class="self">中村 遼</span>.
+		  遠隔会議システムの計測データを用いたネットワーク品質計測. 情報処理学会論文誌, vol.65-3, pp.646-655, 2024年3月15日
+		</li>
+
+		<li>
+		  空閑 洋平, <span class="self">中村 遼</span>, 杉木 章義, mdx：データ活用のためのプラットフォーム, Medical Imaging Technology, 2023, 41 巻, 4-5 号, pp. 137-142
+		</li>
+
+		<li>
+		  杉木 章義, 空閑 洋平, 竹房 あつ子, 藤原 一毅, 合田 憲人, <span class="self">中村 遼</span>, 塙 敏博, 鈴村 豊太郎, 宮本 大輔, 田浦 健次朗, 伊達 進, 建部 修見. データ活用社会創成に向けた基盤ソフトウェア環境の構築. 学術情報処理研究, 2022, 26巻, 1号, pp. 1-9 (招待論文)
+		</li>
+
+		<li>
+		  石原 知洋, 四本 裕子, 角野 浩史, 玉造 潤史, <span class="self">中村 遼</span>, 小川 剛史, 相田 仁, 工藤 知宏. 教室におけるオンライン講義受講のための無線接続環境評価. 情報処理学会論文誌デジタルプラクティス（TDP） 3(3) pp. 66-76 2022年7月15日 
+		</li>
+
+		<li>
+		  Yukito Ueno, <span class="self">Ryo Nakamura</span>,
+		  Yohei Kuga, and Hiroshi Esaki. A NIC-driven
+		  Architecture for High-speed IP Packet Forwarding on
+		  General-purpose Servers. Journal of Information
+		  Processing, Volume 30, pp. 226-237, March 15, 2022
+		</li>
+
+		<li>
+		  Yukito Ueno, <span class="self">Ryo Nakamura</span>,
+		  Yohei Kuga, and Hiroshi Esaki. Fast Longest Prefix
+		  Matching by Exploiting SIMD Instructions. in IEEE
+		  Access, vol. 8, pp. 167027-167041, 2020, doi:
+		  10.1109/ACCESS.2020.3023156.
+		</li>
+
+		<li>
+		  阿部 博, 島 慶一, 宮本 大輔, 関谷 勇司, 石原 知洋, 岡田 和也, <span class="self">中村 遼</span>, 松浦 知史, 篠田 陽一. 時間軸検索に最適化したスケールアウト可能な高速ログ検索エンジンの実現と評価.  情報処理学会論文誌, Vol 60 (2019), No. 3 pp. 728-737
+		</li>
+
+		<li>
+		  堀場 勝広, <span class="self">中村 遼</span>, 鈴木 茂哉, 関谷 勇司, 村井 純. NFVを利用したサービスチェイニングの設計と運用の実践. 情報処理学会, デジタルプラクティス, Vol 9 (2018) No. 4 pp. 923-944
+		</li>
+
+		<li>
+		  <span class="self">中村 遼</span>, 石原 知洋, 関谷 勇司, 江崎 浩. トンネリング技術を用いた汎用機器によるデータセンターマルチパスの実現. 日本ソフトウェア科学会, コンピュータソフトウェア, Vol. 33 (2016) No. 3 pp. 3_29-3_43
+		</li>
+
+		<li>
+		  <span class="self">Ryo Nakamura</span>, Kouji Okada,
+		  Yuji Sekiya, and Hiroshi Esaki. A common data plane
+		  for multiple overlay networks. Elsevier, Computer
+		  Networks, Volume 92, Part 2, pp. 240-250, ISSN
+		  1389-1286, October 2015,
+		  DOI:doi:10.1016/j.comnet.2015.09.031
+		</li>
+
+		<li>
+		  山本 成一, <span class="self">中村 遼</span>, 上野 幸杜, 堀場 勝広, 関谷 勇司. GINEW : 革新的なネットワーク運用管理アーキテクチャの一提案. 日本ソフトウェア科学会, コンピュータ・ソフトウェア, Vol.32 (2015), No.3, pp. 3_46-3_57
+		</li>
+
+		<li>
+		  関谷 勇司, <span class="self">中村 遼</span>, 岡田 和也, 堀場 勝広. SDN と NFVによる新たなネットワークサービス構造の提案. 電子情報通信学会, Vol.J98-B,No.4, pp. 333-344, 2015年4月 (招待論文)
+		</li>
+
+	      </ol>
+	    </div>
+
+	    <div class="international">
+	      <h4 class="mark"><i class="fas fa-plane"></i>
+		International conference/workshop: </h4>
+
+	      <ol>
+		<li>
+		  Koshi Eguchi, <span class="self">Ryo
+		  Nakamura</span>, Yohei Kuga, and Kenjiro
+		  Taura. 2025. InterconnectLens: Enhancing
+		  Observability of Data Transfers in GPU Clusters. In
+		  Practice and Experience in Advanced Research
+		  Computing 2025 (PEARC 2025), Columbus, USA, July
+		  2025, Article 56, pp. 1–5.
+		  [<a href="https://dl.acm.org/doi/10.1145/3708035.3736055">ACM&nbsp;DL</a>]
+
+		</li>
+
+		<li>
+		  Kaito Sawada, <span class="self">Ryo
+		  Nakamura</span>, and Keisuke Uehara. Integrating
+		  Netfilter into SRv6 Routing Infrastructure of Linux
+		  as an SR-Aware Network Function. In the 38th
+		  International Conference on Information Networking
+		  (ICOIN 2024), Ho Chi Minh, Vietnam, January 2024, pp. 251-256
+		  [<a href="https://ieeexplore.ieee.org/document/10572098">IEEE&nbsp;DL</a>]
+		</li>
+
+		<li class="selected">
+		  <span class="self">Ryo Nakamura</span> and Yohei
+		  Kuga. Multi-threaded scp: Easy and Fast File
+		  Transfer over SSH.  In Practice and Experience in
+		  Advanced Research Computing (PEARC 2023), Portland,
+		  USA, July 2023, pp. 320-323 [<a href="https://dl.acm.org/doi/10.1145/3569951.3597582">ACM&nbsp;DL</a>]
+		</li>
+
+		<li>
+		  Shu Anzai, Masanori Misono, <span class="self">Ryo
+		    Nakamura</span>, Yohei Kuga, and Takahiro
+		  Shinagawa.  Towards Isolated Execution at the
+		  Machine Level.  In 13th ACM SIGOPS Asia-Pacific
+		  Workshop on Systems (APSys 2022), 
+		  Virtual Event, Singapore, August 2022, pp. 68-77
+		  [<a href="https://dl.acm.org/doi/10.1145/3546591.3547530">ACM&nbsp;DL</a>]
+		</li>
+
+		<li>
+		  Yukito Ueno, <span class="self">Ryo Nakamura</span>,
+		  Yohei Kuga, and Hiroshi Esaki. Pktpit: Separating
+		  Routing and Packet Transfer for Fast and Scalable
+		  Software Routers. ACM/SIGAPP Symposium on Applied
+		  Computing (SAC 2022), Virtual, April 2022, pp.
+		  943-951
+		  [<a href="https://dl.acm.org/doi/10.1145/3477314.3507025">ACM&nbsp;DL</a>]
+		</li>
+
+		<li class="selected">
+		  <span class="self">Ryo Nakamura</span>, Kazuki
+		  Shimizu, Teppei Kamata, and Cristel Pelsser. A
+		  First Measurement with BGP Egress Peer Engineering.
+		  Passive and Active Measurement Conference (PAM
+		  2022), Virtual, March 2022, pp 199-215
+		  [<a href="https://link.springer.com/chapter/10.1007/978-3-030-98785-5_9">Springer</a>]
+		</li>
+
+		<li>
+		  Yukito Ueno, <span class="self">Ryo Nakamura</span>,
+		  Yohei Kuga, and Hiroshi Esaki. P2PNIC: High-Speed
+		  Packet Forwarding by Direct Communication between
+		  NICs. IEEE Global Internet Symposium (GI 2021),
+		  Virtual, May 2021, pp. 1-6 [<a href="https://ieeexplore.ieee.org/document/9484641">IEEE&nbsp;DL</a>]
+		</li>
+
+
+		<li class="selected">
+		  Hajime Tazaki, Akira Moroo, Yohei Kuga,
+		  and <span class="self">Ryo Nakamura</span>. How to
+		  Design a Library OS for Practical Containers?. In
+		  Proceedings of the 17th ACM SIGPLAN/SIGOPS
+		  International Conference on Virtual Execution
+		  Environments (VEE 2021), Virtual, April 2021,
+		  pp. 15-28
+		  [<a href="https://dl.acm.org/doi/abs/10.1145/3453933.3454011">ACM&nbsp;DL</a>]
+		</li>
+
+		<li>
+		  Ryusei Shiiba, <span class="self">Ryo
+		   Nakamura</span>, Yohei Kuga, and Shigeya Suzuki.
+		  Quickly Testing NIC and Driver Interactions by a
+		   Software-based NIC. In Student Workshop
+		  (CoNEXT 2020), Barcelona, Spain, December 2020, pp. 21-22
+		  [<a href="https://dl.acm.org/doi/abs/10.1145/3426746.3434061">ACM&nbsp;DL</a>]
+		</li>
+
+		<li>
+                  <span class="self">Ryo Nakamura</span>, Yohei Kuga,
+		  and Kunio Akashi. How beneficial is Peer-to-Peer
+		  DMA? In 11th ACM SIGOPS Asia-Pacific Workshop on
+		  Systems (APSys 2020), Virtual Event, Japan,
+		  August 2020, pp. 25-32
+		  [<a href="https://dl.acm.org/doi/10.1145/3409963.3410491">ACM&nbsp;DL</a>]
+		</li>
+
+		<li>
+		  Yukito Ueno, <span class="self">Ryo Nakamura</span>,
+		  Yohei Kuga, and Hiroshi Esaki. Spider:
+		  Parallelizing Longest Prefix Matching with
+		  Optimization for SIMD Instructions. In NetSoft'20:
+		  IEEE Conference on Network Softwarization, Ghent,
+		  Belgium, June 2020, pp. 267-271 (short paper)
+		  [<a href="https://ieeexplore.ieee.org/document/9165306">IEEE&nbsp;DL</a>]
+		  
+		</li>
+
+		<li class="selected">
+		  Yohei Kuga, <span class="self">Ryo Nakamura</span>,
+		  Takeshi Matsuya, and Yuji Sekiya. NetTLP: A Development
+		  Platform for PCIe devices in Software Interacting with
+		  Hardware. In 17th USENIX Symposium on Networked Systems
+		  Design and Implementation (NSDI 2020), Santa Clara, CA,
+		  USA, February 2020, pp. 141-155
+		  [<a href="https://www.usenix.org/conference/nsdi20/presentation/kuga">URL</a>]
+		</li>
+
+		<li>
+		  <span class="self">Ryo Nakamura</span>, Yohei Kuga,
+		  and Yuji Sekiya. An Alternative Fast Packet I/O with
+		  Native System Calls. International Conference on
+		  Future Internet Technologies (CFI 2019), Phuket,
+		  Thailand, August 2019, pp. 1-7
+		  [<a href="https://dl.acm.org/citation.cfm?id=3341193">ACM&nbsp;DL</a>]
+		</li>
+
+		<li>
+		  Hiroshi Abe, Keiichi Shima, Yuji Sekiya, Tomohiro
+		  Ishihara, Kazuya Okada, <span class="self">Ryo
+		  Nakamura</span>, and Satoshi Matsuura. Distributed
+		  Hayabusa: Scalable Syslog Search Engine Optimized
+		  for Time-Dimensional Search. Asian Internet
+		  Engineering Conference (AINTEC 2019), Phuket,
+		  Thailand, August 2019, pp. 9-16
+		  <span class="strong">(Best Paper Award)</span>
+		  [<a href="https://dl.acm.org/citation.cfm?id=3343636">ACM&nbsp;DL</a>]
+		</li>
+
+		<li>
+		  <span class="self">Ryo Nakamura</span>. AF_GRAFT: A new
+		  address family for containerized applications. The
+		  Technical Conference on Linux Networking (Netdev 0x13),
+		  Prague, Czech Republic, March 2019, 4 pages
+		  [<a href="https://www.netdevconf.info/0x13/session.html?talk-AF_GRAFT">URL</a>]
+		</li>
+
+		<li>
+		  <span class="self">Ryo Nakamura</span>, Yukito Ueno,
+		  Teppei Kamata, Kazuki Shimizu, Takashi Tomine, and
+		  Takayuki Watanabe. Practical Service Chaining based
+		  on IP Routing. Asian Internet Engineering Conference
+		  (AINTEC 2018), Bangkok, Thailand, November 2018,
+		  pp. 24-31
+		  [<a href="https://dl.acm.org/citation.cfm?id=3289170">ACM&nbsp;DL</a>]
+		</li>
+
+		<li class="selected">
+		  <span class="self">Ryo Nakamura</span>, Yuji Sekiya,
+		  and Hajime Tazaki. Grafting Sockets for Fast
+		  Container Networking. In ANCS'18: ACM/IEEE Symposium
+		  on Architectures for Networking and Communications
+		  Systems (ANCS 2018), Ithaca, NY, USA, July 2018,
+		  pp. 15-27
+		  <span class="strong">(Best Paper Award)</span>
+		  [<a href="https://dl.acm.org/citation.cfm?id=3230723">ACM&nbsp;DL</a>]
+		  
+		</li>
+
+		<li>
+		  <span class="self">Ryo Nakamura</span>, Yuji Sekiya,
+		  Daisuke Miyamoto, Kazuya Okada and Tomohiro
+		  Ishihara.  Malicious Host Detection by Imaging SYN
+		  Packets and A Neural Network. IEEE International
+		  Symposium on Networks, Computers and Communications
+		  (ISNCC 2018), Roma, Italy, June 2018 (short paper),
+		  pp. 1-4
+		  [<a href="https://ieeexplore.ieee.org/document/8530964">IEEE&nbsp;DL</a>]
+		</li>
+
+		<li>
+		  Hiroshi Esaki and <span class="self">Ryo
+		    Nakamura</span>. Overlaying and Slicing for IoT
+		    Era based on Internet’s End-to-End Disciplin. The
+		    23rd IEEE International Symposium on Local and
+		    Metropolitan Area Networks (LANMAN2017),
+		    Osaka, Japan, June 2017 (invited paper), pp. 1-6
+		    [<a href="https://ieeexplore.ieee.org/document/7972161">IEEE&nbsp;DL</a>]
+		</li>
+
+		<li>
+		  <span class="self">Ryo Nakamura</span>, Yohei Kuga,
+		  Yuji Sekiya, and Hiroshi Esaki. Protocol-Independent
+		  FIB Architecture for Network Overlays. In 7th ACM
+		  SIGOPS Asia-Pacific Workshop on Systems (APSys'16),
+		  Hong Kong, China, August 2016, pp. 1-7
+		  [<a href="https://dl.acm.org/citation.cfm?id=2967372">ACM&nbsp;DL</a>]
+		</li>
+
+		<li>
+		  Daisuke Miyamoto, <span class="self">Ryo
+		    Nakamura</span>, Takeshi Takahashi, and Yuji
+		    Sekiya. "Offloading smartphone firewalling using
+		    OpenFlow-capable wireless access points", IEEE
+		    International Conference on Pervasive Computing
+		    and Communication Workshops (PerCom Workshops),
+		    March 2016, pp. 1-4
+		    [<a href="https://ieeexplore.ieee.org/document/7457060">IEEE&nbsp;DL</a>]
+		</li>
+
+		<li>
+		  <span class="self">Ryo Nakamura</span>, Yohei Kuga,
+		  Yuji Sekiya, and Hiroshi Esaki. Protocol Independent
+		  NIC Offloading for Overlay Networks. ACM CoNEXT 2015
+		  Student workshop, Heidelberg, Germany, December
+		  2015, 2 pages
+		</li>
+
+		<li>
+		  <span class="self">Ryo Nakamura</span>, Kazuya
+		  Okada, Shuichi Saito, Hiroyuki Tanahashi, and Yuji
+		  Sekiya. FlowFall: A Service Chaining Architecture
+		  with Commodity Technologies. 2nd IEEE International
+		  workshop on CoolSDN 2015 (in conjunction with ICNP
+		  2015), San Francisco, USA, November 2015,
+		  pp. 425-431
+		  [<a href="https://ieeexplore.ieee.org/document/7437150">IEEE&nbsp;DL</a>]
+		</li>
+
+		<li>
+		  <span class="self">Ryo Nakamura</span>, Yuji Sekiya,
+		  and Hiroshi Esaki. Layer-3 Multipathing in
+		  Commodity-based Data Center Networks. 18th IEEE Global
+		  Internet Symposium (GI 2015), Hong Kong, China, April
+		  2015, pp. 318-323
+		  [<a href="https://ieeexplore.ieee.org/document/7179404">IEEE&nbsp;DL</a>]
+		</li>
+
+		<li>
+		  Hajime Tazaki, <span class="self">Ryo Nakamura</span>,
+		  and Yuji Sekiya. Library Operating System with Mainline
+		  Linux Network Stack. The Technical Conference on Linux
+		  Networking (netdev01), Ottawa, Canada, Feburary 2015, 6 pages
+		  [<a href="http://people.netfilter.org/pablo/netdev0.1/papers/Library-Operating-System-with-Mainline-Linux-Network-Stack.pdf">PDF</a>]
+		</li>
+
+		<li>
+		  <span class="self">Ryo Nakamura</span>, Kouji Okada,
+		  Yuji Sekiya, and Hiroshi Esaki. ovstack : A Protocol
+		  Stack of Common Data Plane for Overlay Networks.
+		  1st IEEE/IFIP International Workshop on SDN
+		  Management and Orchestration (SDNMO 2014), Krakow,
+		  Poland, May 2014, pp. 1-8
+		  [<a href="https://ieeexplore.ieee.org/document/6838420">IEEE&nbsp;DL</a>]
+		</li>
+
+	      </ol>
+	    </div>
+
+	    <div class="poster">
+	      <h4 class="mark"><i class="fas fa-file-image"></i>
+		Poster: </h4>
+	      <ol>
+
+		<li>
+		  Keiichi Shima, <span class="self">Ryo Nakamura</span>,
+		  Kazuya Okada, Tomohiro Ishihara, Daisuke Miyamoto, and
+		  Yuji Sekiya. Classifying DNS Servers based on Response
+		  Message Matrix using Machine Learning. 6th Annual
+		  Conference on Computational Science and Computational
+		  Intelligence (CSCI'19), December 2019 (Poster Session),
+		  pp. 1550-1551
+		  [<a href="https://ieeexplore.ieee.org/document/9071252">IEEE&nbsp;DL</a>]
+		</li>
+
+		<li>
+		  Kazuya Okada and <span class="self">Ryo Nakamura</span>.
+		  Revealing Network Complexity through Passive Flow
+		  Analysis. In Internet Measurement Conference (IMC'19),
+		  Amsterdam, Netherlands, October 2019 (Poster Session)
+		</li>
+
+		<li>
+		  Hajime Tazaki, Akira Moroo,
+		    and <span class="self">Ryo Nakamura</span>. Jail
+		    to the Outside World: Revisit the Container
+		    Architecture. USENIX Symposium on Operating
+		    Systems Design and Implementation (OSDI'18),
+		    Carlsbad, CA, USA, October 2018 (Poster Session)
+		</li>
+
+		<li>
+		  <span class="self">Ryo Nakamura</span>, Yuji Sekiya,
+		  and Hiroshi Esaki. Implementation and Operation of User
+		  Defined Network on IaaS Clouds Using Layer3 Overlay.
+		  3rd International Conference on Cloud Computing over
+		  Service Science 2013 (CLOSER 2013), Achen, Germany, May
+		  2013 (Poster Session)
+		</li>
+
+		<li>
+		  <span class="self">Ryo Nakamura</span>, Yukito Ueno,
+		  Katsuhiro Horiba, Yuji Sekiya, and Hiroshi Esaki. Route
+		  Optimization for Geographically Distributed IaaS
+		  Platform Through the Integration of LISP and VXLAN.
+		  AsiaFI 2012 Summer School, Kyoto, Japan, August 2012
+		  (Poster Session)
+		</li>
+
+		<li>
+		  Katsuhiro Horiba, Kazuya Okada, Yoshihiro Okamoto,
+		  and <span class="self">Ryo Nakamura</span>. Adaptive
+		  Server Load Balancing on Distributed Cloud. Asian
+		  Internet Engineering Conference (AINTEC'11), Bangkok,
+		  Thailand, November 2011 (Poster Session)
+		</li>
+
+	      </ol>
+	    </div>
+	    
+	    <div class="domestic">
+	      <h4 class="mark"><i class="fas fa-car"></i>
+		Domestic conference: </h4>
+	      <ol>
+
+		<li>
+		  <span class="self">中村 遼</span>, 新 善文. キャンパスネットワークにおける不要な機器設定の自動検出に関する試み. 第17回インターネットと運用技術シンポジウム (IOTS 2024), 2024年12月, pp. 57-64 <span class="strong">(優秀プレゼンテーション賞, 藤村記念ベストプラクティス賞)</span>
+		</li>
+
+		<li>
+		  <span class="self">中村 遼</span>, 海老澤 健太郎, 奥澤 智子, 李 忠翰, 関谷 勇司. ECMPの拡張によるハードウェアロードバランサの提案. 第15回インターネットと運用技術シンポジウム (IOTS 2022), 2022年12月, pp. 40-47 <span class="strong">(優秀論文賞, 優秀プレゼンテーション賞, スポンサー冠賞(アラクサラネットワークス))</span>
+		</li>
+
+		<li>
+		  空閑 洋平, <span class="self">中村 遼</span>. 遠隔会議システムの計測データを用いた広域ネットワーク品質計測. 第15回インターネットと運用技術シンポジウム (IOTS 2022), 2022年12月, pp. 31-38 <span class="strong"> (藤村記念ベストプラクティス賞) </span>
+		</li>
+
+		<li>
+		  石原 知洋, 四本 裕子, 角野 浩史, 玉造 潤史, <span class="self">中村 遼</span>, 小川 剛史, 相田 仁, 工藤 知宏. 教室でのオンライン講義受講のための無線接続環境評価. 第13回インターネットと運用技術シンポジウム (IOTS 2020), 2020年12月, pp. 85-92 <span class="strong">(藤村記念ベストプラクティス賞)</span>
+		</li>
+
+		<li>
+		  Yuta Tokusashi, Yohei Kuga, <span class="self">Ryo
+		    Nakamura</span>, Hajime Tazaki, Hiroki Matsutani.
+		  mitiKV: An Inline Mitigator for DDoS Flooding
+		  Attacks. Internet Conference 2016, 2016年10月
+		</li>
+
+		<li>
+		  坂本裕紀, <span class="self">中村 遼</span>, 江崎 浩. ソフトウェアによるリアルタイムなネットワークトラフィックフロー監視手法. 第15回 情報科学技術フォーラム(FIT 2016), 2016年9月, 6 pages
+		</li>
+
+		<li>
+		  <span class="self">中村 遼</span>, 岡田 耕司, 重近 範行, 村井 純. Universal P2P Architecture for feasible IP Multicastの設計と実装. Internet Conference 2010, 2010年10月
+		</li>
+	      </ol>
+
+	      <h4 class="mark"><i class="fas fa-bicycle"></i>
+		Domestic workshop (without review): </h4>
+	      <ol>
+
+		<li>
+		  玉造 潤史, 中村 誠, <span class="self">中村 遼</span>, 石原 知洋, 田中 哲朗,竹内 朗, 野口 昌志, 宇野 伸一, 小川 剛史. 東京大学における全学無線LAN整備.
+		大学ICT推進協議会年次大会論文集, vol.2023, pp.406-412, 2023年12月
+
+		<li>
+		  <span class="self">中村 遼</span>, 空閑 洋平.  SSHによる高速ファイル転送ライブラリの開発. 電子情報通信学会 信学技報, vol.123, no. 201, IA2022-33, pp.1-5, 2023年10月
+		</li>
+
+		<li>
+		  <span class="self">中村 遼</span>, 空閑 洋平. 複数コネクションを用いる高速なscpの実装. 情報処理学会 研究報告システムソフトウェアとオペレーティング・システム (OS),  2023-OS-158, vol. 19, pp. 1-7, 2023年2月 <span class="strong">(優秀若手発表賞)</span>
+		</li>
+		<li>
+		  空閑 洋平, <span class="self">中村 遼</span>. ソフトウェアメモリを用いたNVMeコマンドのキャプチャ. 情報処理学会 研究報告システムソフトウェアとオペレーティング・システム (OS),  2023-OS-158, vol. 7, pp. 1-7, 2023年2月
+		</li>
+		<li>
+		  澤田 開杜, <span class="self">中村 遼</span>, 植原 啓介.  大規模バックボーンネットワークにおけるRTT計測手法の検討. 電子情報通信学会 信学技報, vol.122, no. 268, IA2022-39, pp.14-19, 2022年11月
+		</li>
+
+		<li>
+		  <span class="self">中村 遼</span>, 鎌田 徹平, 清水一貴, 廣瀬 真人, 渡邊 貴之, 遠峰 隆史.  ShowNet 2022におけるSRv6 Single Stack Backboneの設計と構築. 電子情報通信学会 信学技報, vol. 122, no. 211, IA2022-33, pp. 1-6, 2022年10月
+		</li>
+
+		<li>
+		  塙 敏博, <span class="self">中村 遼</span>, 空閑 洋平, 杉木 章義, 田浦 健次朗. データ利活用に向けた仮想化プラットフォームmdxの基本性能評価. 情報処理学会 研究報告ハイパフォーマンスコンピューティング(HPC), 2022-HPC-183, vol. 7, pp. 1-9, 2022年3月
+		</li>
+
+		<li>
+		  <span class="self">中村 遼</span>, 空閑洋平. AES67のソフトウェアによる実装の試行. 電子情報通信学会 信学技報, vol. 121, no. 409, IA2021-79, pp. 120-123, 2022年3月
+		</li>
+
+		<li>
+		  <span class="self">中村 遼</span>, 空閑洋平, 岡田和也. リアルタイムな音声通信品質の改善を目的としたインターネット回線品質計測. 電子情報通信学会 信学技報, vol. 120, no. 381, IA2020-41, pp. 39-45, 2021年3月
+		</li>
+
+		<li>
+		  <span class="self">中村 遼</span>, 上野幸杜, 鎌田徹平, 清水一貴, 遠峰隆史, 渡邊貴之. ShowNet 2019におけるSRv6 Service Chainingの試行. 電子情報通信学会 信学技報, vol. 119, no. 216, IA2019-23, pp. 23-28, 2019年10月
+		</li>
+
+		<li>
+		  椎葉瑠星, <span class="self">中村 遼</span>, 空閑洋平, 鈴木茂哉. Linux kernel における Storm controlの応用と評価. 電子情報通信学会 信学技報, vol. 119, no. 197, IA2019-11, pp. 7-10, 2019年9月
+		</li>
+
+		<li>
+		  空閑 洋平, 松谷 健史, <span class="self">中村 遼</span>, 関谷 勇司. 物理マシンと協調動作可能なソフトウェアによるPCIeデバイスエミュレーション手法. 並列/分散/協調処理に関するサマー・ワークショップ (SWoPP2019), 2019年7月, 6 pages <span class="strong">(優秀若手発表賞)</span>
+		</li>
+
+		<li>
+		  <span class="self">中村 遼</span>, 上野 幸杜, 鎌田 徹平, 清水 一貴, 遠峰 隆史, 渡邊 貴之. ShowNet 2018におけるIP経路制御技術を用いたサービスチェイニング. 電子情報通信学会 信学技報, vol. 118, no. 204, IA2018-30, pp. 91-96, 2018年9月
+		</li>
+
+		<li>
+		  空閑洋平, 松谷 健史, <span class="self">中村 遼</span>. DDoS緩和のための全IPv4空間を対象としたACLアーキテクチャの検討. 電子情報通信学会 信学技報, vol. 118, no. 204, IA2018-28, pp. 77-81, 2018年9月
+		</li>
+
+		<li>
+		  <span class="self">中村 遼</span>, 関谷 勇司, 工藤 知宏. オープンソースソフトウェアを用いたキャンパスSD-WANの検討. 電子情報通信学会 信学技報, vol. 117, no. 354, IA2017-64, pp. 67-72, 2017年12月
+		</li>
+
+		<li>
+		  <span class="self">中村 遼</span>, 堀場 勝広, 関谷 勇司. SDNを用いたクラウドサービスネットワークの実現. 電子情報通信学会 信学技報, vol. 113, no. 200, IA2013-17,
+		  pp. 5-10, 2013年9月
+		</li>
+	      </ol>
+	    </div>
+	    
+	    <div class="misc">
+	      <h4 class="mark"><i class="fas fa-comments"></i>
+		Misc:
+	      </h4>
+	      <ol>
+		<li>
+		  Takashi Tomine, <span class="self">Ryo Nakamura</span>, and Ryota Motobayashi. ShowNet at Interop Tokyo: A Continuously Evolving Demonstration Network. The Internet Protocol Journal, vol.28-1, May 2025 [<a href="https://ipj.dreamhosters.com/wp-content/uploads/2025/04/281-ipj.pdf">URL</a>]
+		</li>
+
+		<li class="selected">
+		  <span class="self">Ryo Nakamura</span>, Yukito Ueno,
+		  Teppei Kamata. An Experiment of SRv6 Service Chaining
+		  at Interop Tokyo 2019 ShowNet.
+		  draft-upa-srv6-service-chaining-exp, Internet
+		  Engineering Task Force, Work in Progress, October 2019
+		  [<a href="https://tools.ietf.org/html/draft-upa-srv6-service-chaining-exp-00">URL</a>]
+		</li>
+
+		<li>
+		  Yukito Ueno, <span class="self">Ryo Nakamura</span>,
+		  Teppei Kamata. SRv6 Tagging proxy.
+		  draft-eden-srv6-tagging-proxy, Internet Engineering
+		  Task Force, Work in Progress, October 2019
+		  [<a href="https://tools.ietf.org/html/draft-eden-srv6-tagging-proxy-00">URL</a>]
+		</li>
+	      </ol>
+	    </div>
+
+	    <div class="thesis">
+	      <h4 class="mark"><i class="fas fa-file-alt"></i>
+		Ph.D. Thesis: </h4>
+	      <ul>
+		<li> Ryo Nakamura. Improving Packet Transport in Virtual
+		  Networking by Encapsulation Techniques. March 2017. </li>
+	      </ul>
+
+	    </div>
+
+	    <div class="presentation">
+	      <h4 class="mark"><i class="fas fa-tv"></i>
+		Presentations: </h4>
+	      <ol>
+
+		<li>
+		  LLMでネットワーク構築運用支援実験@Interop Tokyo 2025 ShowNet.
+		  JANOG56 Meeting, 島根県立産業交流会館 くにびきメッセ, 2025年7月31日
+		</li>
+
+		<li>
+		  トポロジ図の歩き方.
+		  shownet.conf_, 浅草橋ヒューリックホール, 2024年10月
+		</li>
+
+		<li>
+		  mscp: 迅速・手軽な高速ファイル転送ソフトウェア.
+		  データ活用社会創成シンポジウム2023, オンライン, 2023年12月12日
+		</li>
+
+		<li>
+		  SRv6@ShowNet 2022とプログラマビリティ.
+		  Open Networking Conference Japan 2022, 軽井沢大賀ホール, 2022年10月28日
+		</li>
+
+		<li>
+		  できなかったことから振り返る、ShowNetバックボーンの変遷.
+		  shownet.conf_, オンライン, 2022年9月
+		</li>
+
+		<li>
+		  Interop Tokyo 2021 ShowNetでSegment Routingはどこまで動いたか.
+		  Open Networking Conference Japan 2021, オンライン, 2021年10月21日
+		</li>
+
+		<li>
+		  大学・研究機関連携で作る新しい学術情報基盤mdxとそのネットワーク構成.
+		  ADVNET 2021, オンライン, 2021年10月15日
+		</li>
+
+
+		<li>
+		  SR-MPLS Egress Peer Engineeringを使って測るインターネットレイテンシー. JANOG48 Meeting, ソフトピアジャパンセンター, 2021年7月15日
+		</li>
+
+		<li>
+		  高度なトラフィック制御をシンプルに実現するバックボーン.
+		  shownet.conf_1: ShowNetの全体コンセプトと設計, Interop Tokyo  Conference, オンライン, 2021年6月23日 
+		</li>
+
+		<li>
+		  mdx: 大学・研究機関連携で作るデータ活用のための新しい学術情報基盤. JAPAN OPEN SCIENCE SUMMIT, 研究データインフラ技術者＆研究者座談会, オンライン, 2021年6月16日
+		</li>
+
+		<li>
+		  How beneficial is Peer-to-Peer DMA?. 第32回コンピュータシステム・シンポジウム (ComSys2020), 凱旋講演, オンライン, 2020年12月2日
+		</li>
+
+		<li>
+		  Interop Tokyo ShowNetにおけるSDNのあゆみ (パネルセッション).
+		  Open Networking Conference Japan 2020, オンライン, 2020年10月16日
+		</li>
+
+		<li>
+		  キャンパスネットワークにおけるSD-WANの開発とその運用.
+		  ADVNET 2020, オンライン, 2020年10月9日
+		</li>
+
+		<li>
+		  ShowNetの構築と東京大学SD-WANの開発から見る、相互接続性と本当に必要だったもの.
+		  Network World 2020, JPタワーホール&amp;カンファレンス, 2020年10月6日
+		</li>
+
+		<li>
+		  IP経路制御技術を最大限に活用した複数拠点間サービスチェイニング.
+		  shownet.conf_, 新宿エルタワー サンスカイルーム, 2018年11月20日
+		</li>
+
+		<li>
+		  IP経路制御技術でつくる実践的なサービスチェイニング@ShowNet 2018.
+		  Open Networking Conference Japan 2018, 軽井沢大賀ホール, 2018年10月19日
+		</li>
+
+		<li>
+		  Containers Do Not Need Network Stacks, IIJ lab seminar.
+		  株式会社インターネットイニシアティブ, 2018年10月16日
+		</li>
+
+		<li>
+		  OSSでつくる yet another SD-WAN, ENOG49 meeting. 嵐渓荘,
+		  2018年2月23日
+		</li>
+
+		<li>
+		  ShowNetのつくり方. shownet.conf_,
+		  JPタワーホール＆カンファレンス, 2017年9月26日
+		</li>
+
+		<li>
+		  技術の適材適所でつくるSDN/NFV@ShowNet 2016.
+		  Open Networking Conference Japan 2016, 慶應義塾大学 藤原記念ホール, 2016年10月21日
+		</li>
+
+		<li>
+		  Interop Tokyo ShowNet 2015におけるSDN/NFV.
+		  SDN Japan 2015, 御茶ノ水ソラシティ, 2016年1月14日
+		</li>
+
+		<li>
+		  INTEROP Tokyo 2014 ShowNetにおけるSDN/NFV.
+		  SDN Japan 2014, 恵比寿 ザ・ガーデンホール, 2014年10月30日
+		</li>
+
+		<li>
+		  SDN/NFV at Interop Tokyo 2014 ShowNet.
+		  APAN 38th Meeting, Nantou, Taiwan, August 2014
+		</li>
+
+		<li>
+		  INTEROP Tokyo 2013 ShowNetにおけるSDNの実際.
+		  SDN Japan 2013, 恵比寿 ザ・ガーデンホール, 2013年9月18日
+		</li>
+
+	      </ol>
+	    </div>
+	  </div>
+	</div>
+      </article>
+
+      
+      <article>
+	<h4 class="mark"><i class="fas fa-graduation-cap"></i> Degree: </h4>
+	<ul>
+	  <li> March 2017, Ph.D. degree in Information
+	    Science and Technology from the University of Tokyo
+	    (<a href="http://www.hongo.wide.ad.jp/">Esaki Lab</a>).</li>
+	  <li> March 2014, Master degree in Information
+	    Science and Technology from the University of Tokyo. </li>
+	  <li> March 2012, Bachelor degree from Keio University
+	    (<a href="https://rg.sfc.keio.ac.jp/">Murai Lab</a>).
+	  </li>
+	</ul>
+      </article>
+
+
+      <!--
+      <article>
+	<h4 class="mark"><i class="fas fa-university"></i> Former Lab: </h4>
+	<ul>
+	  <li> Esaki Lab, the University of Tokyo:
+	    <a href="http://www.hongo.wide.ad.jp/index_en.html">
+	      http://www.hongo.wide.ad.jp/index_en.html </a>
+	    (Graduate course) </li>
+	  <li> Murai Lab, Keio University:
+	    <a href="http://www.sfc.wide.ad.jp/IRL/">
+	      http://www.sfc.wide.ad.jp/IRL/ </a> (Undergraduate course) </li>
+	</ul>
+      </article>
+      -->
+
+      <article>
+	<h4 class="mark"><i class="far fa-edit"></i>
+	  Note: </h4>
+	<ul>
+	  <li> <a href="closed/phd.html">
+	      A long road to Ph.D. / 博士への長い道</a>
+	      (wide|rg|elab password required)
+	  </li>
+	</ul>
+      </article>
+
+      </main>
+
+    <footer>
+      Last modified: <script type="text/javascript"> lastmod(); </script>
+    </footer>
+
+
+    <script type="text/javascript"> toggle_publications(); </script>
+  </body>
+</html>
