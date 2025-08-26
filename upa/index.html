@@ -118,24 +118,19 @@ footer {
      }
 
      function toggle(target_class) {
-	 var pub = document.getElementsByClassName(target_class);
-	 var pubs = pub[0].getElementsByTagName("li");
-	 for (var n = 0; n < pubs.length; n++) {
-	     if (!pubs[n].classList.contains("selected"))
-		 toggle_display(pubs[n]);
-	 }
 
-	 var visible = false;
-	 for (var n = 0; n < pubs.length; n++) {
-	     if (pubs[n].style.display == "") {
-		 visible = true;
-		 break;
+	 var container = document.querySelector("." + target_class);
+	 var pubs = container.querySelectorAll("li");
+	 pubs.forEach(function (li) {
+	     if (!li.classList.contains("selected")) {
+		 toggle_display(li);
 	     }
-	 }
-	 if (visible)
-	     pub[0].style.display = "";
-	 else
-	     pub[0].style.display = "none";
+	 });
+
+	 var visible = Array.from(pubs).some(function (li) {
+	     return window.getComputedStyle(li).display !== "none";
+	 });
+	 container.style.display = visible ? "" : "none";
      }
 
      function toggle_class(obj, classname) {
@@ -147,10 +142,10 @@ footer {
 
      function toggle_publications() {
 
-	 var toggles = document.getElementsByClassName("toggle-switch");
-	 for (var n = 0; n < toggles.length; n++) {
-	     toggle_class(toggles[n], "disabled");
-	 }
+	 var toggles = document.querySelectorAll(".toggle-switch");
+	 toggles.forEach(function(toggle){
+	     toggle_class(toggle, "disabled");
+	 });
 
 	 toggle("journal");
 	 toggle("international");
@@ -160,7 +155,6 @@ footer {
 	 toggle("thesis");
 	 toggle("presentation");
      }
-
 
     </script>
 
