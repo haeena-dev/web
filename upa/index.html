@@ -90,6 +90,9 @@ a.toggle-switch.disabled {
     border-bottom: none;
 }
 
+.hidden {
+    display: none;
+}
 
 footer {
   margin: 80px 0 30px 0;
@@ -111,7 +114,14 @@ footer {
      }
 
      function toggle_display(obj) {
-	 obj.style.display = obj.style.display === "none" ? "" : "none";
+	 if (obj.classList.contains("selected")) {
+	     return;
+	 }
+
+	 if (obj.classList.contains("hidden"))
+	     obj.classList.remove("hidden");
+	 else
+	     obj.classList.add("hidden");
      }
 
      function toggle(target_class) {
@@ -119,29 +129,24 @@ footer {
 	 var container = document.querySelector("." + target_class);
 	 var pubs = container.querySelectorAll("li");
 	 pubs.forEach(function (li) {
-	     if (!li.classList.contains("selected")) {
-		 toggle_display(li);
-	     }
+	     toggle_display(li);
 	 });
 
 	 var visible = Array.from(pubs).some(function (li) {
-	     return window.getComputedStyle(li).display !== "none";
+	     return !li.classList.contains("hidden");
 	 });
 	 container.style.display = visible ? "" : "none";
      }
 
-     function toggle_class(obj, classname) {
-	 if (obj.classList.contains(classname))
-	     obj.classList.remove(classname);
-	 else
-	     obj.classList.add(classname);
-     }
-
      function toggle_publications() {
 
-	 var toggles = document.querySelectorAll(".toggle-switch");
-	 toggles.forEach(function(toggle){
-	     toggle_class(toggle, "disabled");
+	 /* enable/disable [Selected] and [All] */
+	 var selected_or_all = document.querySelectorAll(".toggle-switch");
+	 selected_or_all.forEach(function(sw) {
+	     if (sw.classList.contains("disabled"))
+		 sw.classList.remove("disabled");
+	     else
+		 sw.classList.add("disabled");
 	 });
 
 	 toggle("journal");
